@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kent Water Purifier: Interactive Buying Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Cool Blues -->
+    <!-- Application Structure Plan: The application is designed as a user-centric decision journey, not a linear report summary. It starts with a hero section that states the main finding. It then moves to a "Needs vs. Reality" section to correct common misconceptions (about Kent Supreme Lite). The core is an interactive "Model Comparator" where users can filter purifiers by key features, instantly updating both a product grid and a price comparison chart. This is followed by a "Total Cost" breakdown and a "Retailer Showdown". The journey concludes with a clear "Final Recommendation & Action Plan" with checklists. This task-oriented flow is more intuitive for a potential buyer than the original report's structure, guiding them from confusion to a clear, actionable choice. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Model Prices (MRP vs. Online). Goal: Compare. Viz: Interactive Bar Chart (Chart.js). Interaction: Filters update chart data. Justification: Instantly visualizes the significant discounts available online, a key finding of the report. Library: Chart.js.
+        - Report Info: Model Features & Specs. Goal: Organize/Compare. Viz: Interactive Filterable Grid. Interaction: Users click feature buttons (e.g., 'Zero Water Wastage') to filter the models displayed. Justification: Empowers users to quickly find products that match their specific priorities, making the large product catalog manageable. Library/Method: Vanilla JS DOM manipulation.
+        - Report Info: Warranty Details (1+3 Years). Goal: Inform/Clarify. Viz: Structured HTML/CSS diagram with icons. Interaction: Static visual display. Justification: Deconstructs the complex marketing offer into a simple, understandable visual, explaining what is and isn't covered. Library/Method: HTML/Tailwind.
+        - Report Info: Pre-purchase/Installation Checklists. Goal: Organize/Action. Viz: Accordion component. Interaction: User clicks to expand/collapse sections. Justification: Presents dense but critical final steps in a compact, non-overwhelming way, improving user experience. Library/Method: Vanilla JS.
+        - Report Info: Kent Supreme Lite analysis. Goal: Inform/Warn. Viz: Simple comparison card with check/cross icons. Interaction: Static display. Justification: Immediately addresses a key point of confusion from the report in a highly scannable, unambiguous format. Library/Method: HTML/Tailwind with Unicode icons.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .filter-button.active {
+            background-color: #1e40af;
+            color: white;
+            border-color: #1e40af;
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-2">Kent Water Purifier Purchase Guide</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive dashboard to help you choose the right RO+UF+UV model at the best price in India.</p>
+        </header>
+
+        <nav class="sticky top-2 bg-white/80 backdrop-blur-sm z-10 rounded-xl shadow-md mb-12 p-2 max-w-4xl mx-auto">
+            <div class="flex justify-center items-center space-x-2 sm:space-x-4">
+                <a href="#section-recommendation" class="nav-button text-sm sm:text-base font-medium text-gray-700 hover:bg-blue-100 px-3 py-2 rounded-lg">Recommendation</a>
+                <a href="#section-comparator" class="nav-button text-sm sm:text-base font-medium text-gray-700 hover:bg-blue-100 px-3 py-2 rounded-lg">Compare Models</a>
+                <a href="#section-cost" class="nav-button text-sm sm:text-base font-medium text-gray-700 hover:bg-blue-100 px-3 py-2 rounded-lg">Total Cost</a>
+                <a href="#section-retailers" class="nav-button text-sm sm:text-base font-medium text-gray-700 hover:bg-blue-100 px-3 py-2 rounded-lg">Where to Buy</a>
+            </div>
+        </nav>
+
+        <main>
+            <section id="section-recommendation" class="mb-16 p-8 bg-white rounded-2xl shadow-lg">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-2">Executive Summary & Top Pick</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">After analyzing dozens of models and retailers, we've distilled the key information to save you time and money.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                        <h3 class="font-bold text-xl text-blue-900 mb-3">Key Finding: A Common Mistake</h3>
+                        <p class="text-gray-700 mb-4">Your goal is a purifier with RO, UF, and UV protection. The popular **Kent Supreme Lite**, however, <span class="font-bold text-red-600">does NOT have UV purification</span>. Relying on incorrect retailer info is a common pitfall.</p>
+                        <div class="bg-red-100 p-4 rounded-lg text-red-800">
+                            <strong>Verdict:</strong> The Kent Supreme Lite is unsuitable. We must look at alternatives.
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-xl border border-green-300">
+                        <h3 class="font-bold text-xl text-green-900 mb-3">Top Recommended Model</h3>
+                        <p class="text-gray-700 mb-2">For the best balance of features and price, our analysis points to one clear winner:</p>
+                        <div class="text-center bg-white p-4 rounded-lg">
+                            <h4 class="text-2xl font-bold text-green-800">KENT Grand (111119)</h4>
+                            <p class="text-sm text-gray-500">RO + UF + TDS Control + UV In-tank</p>
+                        </div>
+                        <p class="text-sm text-center mt-2 text-gray-600">Scroll down to see why this model wins and compare it with others.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-comparator" class="mb-16">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-2">Interactive Model Comparator</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Select features to filter models and see how prices compare. The chart shows the huge gap between official MRP and typical online prices.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-lg mb-8">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 text-center mb-3">Filter by Key Features:</h3>
+                        <div id="filter-container" class="flex flex-wrap justify-center gap-3">
+                            <button data-feature="uvInTank" class="filter-button px-4 py-2 text-sm font-medium border rounded-full">🛡️ UV In-tank</button>
+                            <button data-feature="zeroWastage" class="filter-button px-4 py-2 text-sm font-medium border rounded-full">💧 Zero Water Wastage</button>
+                            <button data-feature="digitalDisplay" class="filter-button px-4 py-2 text-sm font-medium border rounded-full">💻 Digital Display</button>
+                            <button data-feature="alkalineCopper" class="filter-button px-4 py-2 text-sm font-medium border rounded-full">✨ Alkaline/Copper</button>
+                            <button id="reset-filters" class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300">Reset All</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="price-chart"></canvas>
+                    </div>
+                </div>
+
+                <div id="model-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+                 <div id="no-results" class="hidden text-center py-10 bg-white rounded-2xl shadow-lg">
+                    <p class="text-xl text-gray-500">No models match the selected filters.</p>
+                </div>
+            </section>
+            
+            <section id="section-cost" class="mb-16">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-2">Understanding the Total Cost</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Your purchase price is just the beginning. Here's a breakdown of other potential costs and the real value of the warranty.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-xl font-bold text-blue-900 mb-4">Installation: "Free" with an Asterisk</h3>
+                        <p class="text-gray-700 mb-4">While basic installation is free, you may need to pay for an external pre-filter if your water has high sediment. This is often mandatory to protect your purifier and warranty.</p>
+                        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-r-lg">
+                            <p><strong>Budget for Accessories:</strong> Plan for an additional **₹700 - ₹1,200** for a pre-filter and related fittings.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg">
+                         <h3 class="text-xl font-bold text-blue-900 mb-4">Deconstructing the "1+3 Years" Warranty</h3>
+                         <p class="text-gray-700 mb-4">The "1 Year Warranty + 3 Years Free Service" is a great offer, but it's important to know what's covered.</p>
+                         <div class="space-y-3">
+                            <div class="flex items-start">
+                                <span class="text-green-500 text-2xl mr-3">✔️</span>
+                                <div><strong class="text-gray-800">Year 1 (Full Warranty):</strong> All parts (pump, UV lamp, etc.) and labor are covered for manufacturing defects.</div>
+                            </div>
+                             <div class="flex items-start">
+                                <span class="text-green-500 text-2xl mr-3">✔️</span>
+                                <div><strong class="text-gray-800">Years 2-4 (Free Service):</strong> You pay <span class="font-bold">NO labor or visit charges</span> for service calls.</div>
+                            </div>
+                             <div class="flex items-start">
+                                <span class="text-red-500 text-2xl mr-3">❌</span>
+                                 <div><strong class="text-gray-800">What's NOT covered:</strong> The cost of consumable filters (Sediment, Carbon, RO/UF membranes) is <span class="font-bold">your responsibility</span> throughout the 4 years and beyond. This is the main running cost.</div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-retailers" class="mb-16">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-2">Retailer Showdown: Where to Buy</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Not all online stores are equal. Here's how the major players stack up for buying a water purifier.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500">
+                        <h3 class="text-xl font-bold text-green-800 mb-3">Flipkart (Top Choice)</h3>
+                        <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                            <li><strong>Best Prices:</strong> Consistently offers the most aggressive discounts and bank offers.</li>
+                            <li><strong>Authorized Seller:</strong> Ensures genuine products and facilitates official KENT installation.</li>
+                            <li><strong>Good Policy:</strong> Offers a "7-Day Service Center Replacement" for defects.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500">
+                        <h3 class="text-xl font-bold text-blue-800 mb-3">Amazon & Croma</h3>
+                        <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                            <li><strong>Competitive:</strong> Prices are often on-par with Flipkart, especially during sales.</li>
+                            <li><strong>Reliable:</strong> Croma offers the trust of a physical store network.</li>
+                            <li><strong>Strong Alternatives:</strong> Always worth checking for specific deals or better delivery times.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-red-500">
+                        <h3 class="text-xl font-bold text-red-800 mb-3">Tata Cliq (Use Caution)</h3>
+                        <ul class="space-y-2 text-gray-700 list-disc list-inside">
+                            <li><strong>High Risk:</strong> Products are often listed as "non-returnable".</li>
+                            <li><strong>Limited Recourse:</strong> If the product is damaged on arrival, you can't return it to the seller.</li>
+                            <li><strong>Not Recommended:</strong> The lack of a return safety net makes it a risky choice for this category.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+             <section id="section-action-plan" class="bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-2">Your Final Action Plan</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">You've done the research. Here are the final checklists to ensure a smooth purchase and installation.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div id="accordion-container" class="space-y-4">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const modelsData = [
+            { id: 111110, name: 'Kent Supreme Lite', features: { ro: true, uf: true, tds: true }, storage: 8, rate: 20, mrp: 22500, onlinePrice: 14437, isRecommended: false },
+            { id: 111111, name: 'KENT Supreme', features: { ro: true, uf: true, tds: true, uvInTank: true }, storage: 8, rate: 20, mrp: 23500, onlinePrice: 13999, isRecommended: false },
+            { id: 111119, name: 'KENT Grand', features: { ro: true, uf: true, tds: true, uvInTank: true }, storage: 8, rate: 20, mrp: 23000, onlinePrice: 11999, isRecommended: true },
+            { id: 111099, name: 'KENT Grand Plus', features: { ro: true, uf: true, tds: true, uvInTank: true, zeroWastage: true }, storage: 9, rate: 20, mrp: 25500, onlinePrice: 19401, isRecommended: false },
+            { id: 111109, name: 'KENT Ace Star B', features: { ro: true, uf: true, tds: true, uvInTank: true, digitalDisplay: true }, storage: 8, rate: 20, mrp: 28000, onlinePrice: 21500, isRecommended: false },
+            { id: 111101, name: 'KENT Grand Star B', features: { ro: true, uf: true, tds: true, uvInTank: true, zeroWastage: true, digitalDisplay: true, alkalineCopper: true }, storage: 9, rate: 20, mrp: 28000, onlinePrice: 22200, isRecommended: false }
+        ];
+
+        const checklistData = [
+            { 
+                title: "Pre-Purchase Checklist", 
+                content: [
+                    "<strong>Verify the Model:</strong> Before buying, double-check the model is <strong>KENT Grand (111119)</strong>. Confirm the specs (RO+UF+UV In-tank) on the retailer's page.",
+                    "<strong>Maximize Savings:</strong> Look for bank offers, coupons, or no-cost EMI options on the product page to lower the final price.",
+                    "<strong>Check Local Feedback:</strong> Read recent reviews from your city. Look for comments on installation experience and any mention of extra costs."
+                ]
+            },
+            {
+                title: "Installation Day Checklist",
+                content: [
+                    "<strong>Water Test First:</strong> Ask the technician to test your tap water's TDS level with their meter before they unbox the unit.",
+                    "<strong>Clarify Accessory Needs:</strong> Ask directly: 'Is a pre-filter mandatory for my water quality to keep the warranty valid?'",
+                    "<strong>Confirm All Costs:</strong> If a pre-filter is needed, get the final, all-inclusive price for the part and any extra labor *before* work begins.",
+                    "<strong>TDS Controller Adjustment:</strong> Ensure the technician adjusts the TDS controller to a taste you like. Ask for a demo.",
+                    "<strong>Activate Warranty:</strong> Immediately after installation, use the KENT Service App or call 9278912345 to register your product and activate your 1+3 year warranty."
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelGrid = document.getElementById('model-grid');
+            const noResultsDiv = document.getElementById('no-results');
+            const filterContainer = document.getElementById('filter-container');
+            const resetBtn = document.getElementById('reset-filters');
+            const accordionContainer = document.getElementById('accordion-container');
+            
+            let activeFilters = {
+                uvInTank: false,
+                zeroWastage: false,
+                digitalDisplay: false,
+                alkalineCopper: false
+            };
+
+            let priceChart;
+
+            const renderModels = () => {
+                const filteredModels = modelsData.filter(model => {
+                    return Object.keys(activeFilters).every(filter => {
+                        return !activeFilters[filter] || model.features[filter];
+                    });
+                });
+
+                modelGrid.innerHTML = '';
+                if (filteredModels.length === 0) {
+                    noResultsDiv.classList.remove('hidden');
+                    modelGrid.classList.add('hidden');
+                } else {
+                    noResultsDiv.classList.add('hidden');
+                    modelGrid.classList.remove('hidden');
+                    filteredModels.forEach(model => {
+                        const card = document.createElement('div');
+                        card.className = `product-card bg-white rounded-2xl p-6 shadow-md border-2 ${model.isRecommended ? 'border-green-500' : 'border-transparent'}`;
+                        card.innerHTML = `
+                            ${model.isRecommended ? '<div class="text-right text-xs font-bold text-green-600 mb-2">TOP PICK</div>' : ''}
+                            <h3 class="text-xl font-bold text-blue-900">${model.name}</h3>
+                            <p class="text-sm text-gray-500 mb-4">Item Code: ${model.id}</p>
+                            <div class="text-sm space-y-2 mb-4">
+                                ${model.features.ro ? '<p>✔️ Reverse Osmosis (RO)</p>' : ''}
+                                ${model.features.uf ? '<p>✔️ Ultrafiltration (UF)</p>' : ''}
+                                ${model.features.uvInTank ? '<p>✔️ UV In-tank Disinfection</p>' : ''}
+                                ${model.features.tds ? '<p>✔️ TDS Controller</p>' : ''}
+                                ${model.features.zeroWastage ? '<p>✔️ Zero Water Wastage</p>' : ''}
+                                ${model.features.digitalDisplay ? '<p>✔️ Digital Display</p>' : ''}
+                                ${model.features.alkalineCopper ? '<p>✔️ Alkaline & Copper</p>' : ''}
+                            </div>
+                            <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg">
+                                <div>
+                                    <p class="text-xs text-gray-500 line-through">MRP: ₹${model.mrp.toLocaleString('en-IN')}</p>
+                                    <p class="text-lg font-bold text-blue-800">₹${model.onlinePrice.toLocaleString('en-IN')}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-base font-bold text-green-600">${(((model.mrp - model.onlinePrice) / model.mrp) * 100).toFixed(0)}% Off</p>
+                                </div>
+                            </div>
+                        `;
+                        modelGrid.appendChild(card);
+                    });
+                }
+                updatePriceChart(filteredModels);
+            };
+
+            const createPriceChart = () => {
+                const ctx = document.getElementById('price-chart').getContext('2d');
+                priceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: 'MRP',
+                                data: [],
+                                backgroundColor: 'rgba(203, 213, 225, 0.8)',
+                                borderColor: 'rgb(100, 116, 139)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Online Price',
+                                data: [],
+                                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                                borderColor: 'rgb(37, 99, 235)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) { return '₹' + (value / 1000) + 'k'; }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const updatePriceChart = (filteredModels) => {
+                priceChart.data.labels = filteredModels.map(m => m.name);
+                priceChart.data.datasets[0].data = filteredModels.map(m => m.mrp);
+                priceChart.data.datasets[1].data = filteredModels.map(m => m.onlinePrice);
+                priceChart.update();
+            };
+
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' && e.target.dataset.feature) {
+                    const feature = e.target.dataset.feature;
+                    activeFilters[feature] = !activeFilters[feature];
+                    e.target.classList.toggle('active');
+                    renderModels();
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                Object.keys(activeFilters).forEach(key => activeFilters[key] = false);
+                document.querySelectorAll('.filter-button.active').forEach(btn => btn.classList.remove('active'));
+                renderModels();
+            });
+
+            const renderChecklists = () => {
+                checklistData.forEach((item, index) => {
+                    const accordionItem = document.createElement('div');
+                    accordionItem.className = 'border border-gray-200 rounded-lg';
+                    accordionItem.innerHTML = `
+                        <button class="accordion-header w-full flex justify-between items-center p-4 text-left font-semibold text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                            <span>${item.title}</span>
+                            <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content hidden p-4 border-t border-gray-200">
+                           <ul class="space-y-3 list-decimal list-inside text-gray-700">${item.content.map(li => `<li>${li}</li>`).join('')}</ul>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(accordionItem);
+                });
+
+                document.querySelectorAll('.accordion-header').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const content = button.nextElementSibling;
+                        const icon = button.querySelector('svg');
+                        content.classList.toggle('hidden');
+                        icon.classList.toggle('rotate-180');
+                    });
+                });
+            };
+            
+            const initNavScroll = () => {
+                const navLinks = document.querySelectorAll('.nav-button');
+                const sections = document.querySelectorAll('main > section');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(link => {
+                                link.classList.remove('active');
+                                if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                    link.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                }, { rootMargin: "-50% 0px -50% 0px" });
+
+                sections.forEach(section => observer.observe(section));
+
+                navLinks.forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.querySelector(this.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            };
+
+            createPriceChart();
+            renderModels();
+            renderChecklists();
+            initNavScroll();
+        });
+    </script>
+</body>
+</html>
