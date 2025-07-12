@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyderabad Water Purifier Buying Guide: Kent vs. Eureka Forbes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 380px;
+            }
+        }
+        .kpi-card {
+            background-color: #00A5E3;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .flow-step {
+            border-color: #00A5E3;
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            background-color: #E6F6FD;
+            border-color: #FF5768;
+        }
+        .arrow {
+            color: #00A5E3;
+        }
+        .brand-card {
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .brand-card:hover {
+            border-color: #00A5E3;
+            box-shadow: 0 0 20px rgba(0, 165, 227, 0.2);
+        }
+        .pro-con-list li::before {
+            content: '✓';
+            color: #8DD7BF;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        .pro-con-list.cons li::before {
+            content: '✗';
+            color: #FF5768;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl md:text-4xl font-black text-center text-gray-900 tracking-tighter">
+                The Smart Buyer's Guide to Water Purifiers in <span class="text-[#00A5E3]">Hyderabad</span>
+            </h1>
+            <p class="text-center text-gray-600 mt-2 text-sm md:text-base">An Infographic for the Pragmatic Homeowner: Kent vs. Eureka Forbes</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="hyderabad-water" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 1: The Hyderabad Water Challenge</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">Hyderabad's water is a complex mix from rivers, borewells, and tankers. This creates wildly different water quality across the city, making a one-size-fits-all purifier a risky choice.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-center mb-4">TDS Levels are Hyper-Local: A Tale of Two Taps</h3>
+                <p class="text-center text-gray-600 mb-6 text-sm">Total Dissolved Solids (TDS) measure water purity. The data below shows that your neighbor's water quality isn't a reliable guide for your own. An RO purifier is often essential.</p>
+                <div class="chart-container">
+                    <canvas id="tdsChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <hr class="my-12 border-t-2 border-gray-200">
+
+        <section id="your-first-move" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 2: Your First Actionable Step</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">Don't guess, test! A simple, inexpensive TDS meter is the single most important tool in your decision-making process. It dictates the technology you actually need.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-center mb-6">Your TDS-Based Decision Flowchart</h3>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="text-center p-4 border-2 rounded-lg flow-step">
+                        <p class="text-5xl mb-2">🧪</p>
+                        <p class="font-bold">Test Your Water</p>
+                        <p class="text-sm">Buy a TDS Meter (₹200)</p>
+                    </div>
+                    <div class="text-4xl font-thin arrow hidden md:block">→</div>
+                     <div class="text-4xl font-thin arrow md:hidden">↓</div>
+                    <div class="text-center p-4 border-2 rounded-lg flow-step">
+                         <p class="font-bold text-[#00A5E3]">TDS < 300 PPM</p>
+                         <p class="font-semibold">UV + UF is likely sufficient</p>
+                         <p class="text-sm">Retains minerals, no water waste</p>
+                    </div>
+                    <div class="text-4xl font-thin arrow hidden md:block">→</div>
+                     <div class="text-4xl font-thin arrow md:hidden">↓</div>
+                    <div class="text-center p-4 border-2 rounded-lg flow-step bg-blue-50">
+                        <p class="font-bold text-[#FF5768]">TDS 300-500+ PPM</p>
+                        <p class="font-semibold">RO is Essential</p>
+                        <p class="text-sm">Removes dissolved solids & metals</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <hr class="my-12 border-t-2 border-gray-200">
+
+        <section id="tech-decoded" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 3: Decoding the Technology</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">Understand the pros and cons of each purification method to see why a multi-stage RO system is the safest bet for most of Hyderabad.</p>
+            </div>
+             <div class="overflow-x-auto bg-white rounded-lg shadow-md p-2">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 rounded-tl-lg">Technology</th>
+                            <th scope="col" class="px-6 py-3">Removes</th>
+                            <th scope="col" class="px-6 py-3">Key Pro</th>
+                            <th scope="col" class="px-6 py-3 rounded-tr-lg">Key Con</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-bold text-[#00A5E3]">Reverse Osmosis (RO)</th>
+                            <td class="px-6 py-4">Dissolved Solids, Heavy Metals, Chemicals</td>
+                            <td class="px-6 py-4 text-green-600">Most comprehensive purification</td>
+                            <td class="px-6 py-4 text-red-600">Wastes water, strips minerals</td>
+                        </tr>
+                        <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-bold text-[#00A5E3]">Ultraviolet (UV)</th>
+                            <td class="px-6 py-4">Inactivates Bacteria & Viruses</td>
+                            <td class="px-6 py-4 text-green-600">Disinfects without chemicals</td>
+                            <td class="px-6 py-4 text-red-600">Doesn't remove any physical impurities</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <th scope="row" class="px-6 py-4 font-bold text-[#00A5E3] rounded-bl-lg">Ultrafiltration (UF)</th>
+                            <td class="px-6 py-4">Suspended Solids, some Bacteria</td>
+                            <td class="px-6 py-4 text-green-600">No electricity needed, keeps minerals</td>
+                            <td class="px-6 py-4 text-red-600 rounded-br-lg">Can't remove dissolved solids (TDS)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg" role="alert">
+              <p class="font-bold">Critical Feature: TDS Controller</p>
+              <p>Modern RO purifiers should have a TDS controller. This feature re-adds essential minerals back into the purified water, improving taste and health benefits. Consider it a must-have.</p>
+            </div>
+        </section>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+
+        <section id="true-cost" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 4: The True Cost of Clean Water</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">The sticker price is just the beginning. The real expense lies in long-term maintenance. See how a DIY approach can save you thousands.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-center mb-4">5-Year Total Cost of Ownership (TCO)</h3>
+                    <p class="text-center text-gray-600 mb-6 text-sm">This chart compares the total cost over 5 years for our recommended models, contrasting the expensive official Annual Maintenance Contract (AMC) with the far cheaper DIY path.</p>
+                    <div class="chart-container">
+                        <canvas id="tcoChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-center mb-4">The "Razor & Blades" Business Model</h3>
+                     <p class="text-center text-gray-600 mb-6 text-sm">Brands often sell the purifier cheap and profit from expensive, mandatory filter changes and service contracts, driven by timers, not actual need.</p>
+                    <div class="space-y-4 text-center">
+                        <div class="p-4 bg-gray-100 rounded-lg shadow-inner">
+                            <p class="text-2xl">⚙️</p>
+                            <p class="font-bold text-lg">The Purifier (The "Razor")</p>
+                            <p class="text-sm">Sold at a competitive initial price.</p>
+                        </div>
+                        <div class="text-4xl font-thin arrow">↓</div>
+                        <div class="flex space-x-4">
+                             <div class="flex-1 p-4 bg-red-100 rounded-lg shadow-inner">
+                                <p class="text-2xl">⏳</p>
+                                <p class="font-bold text-lg">Timed Alarms</p>
+                                <p class="text-sm">Forcing service calls & part changes.</p>
+                            </div>
+                            <div class="flex-1 p-4 bg-red-100 rounded-lg shadow-inner">
+                                <p class="text-2xl">💸</p>
+                                <p class="font-bold text-lg">High-Cost AMCs</p>
+                                <p class="text-sm">Annual fees of ₹4,500+</p>
+                            </div>
+                        </div>
+                        <div class="text-4xl font-thin arrow">↓</div>
+                         <div class="p-4 bg-green-100 rounded-lg shadow-inner">
+                            <p class="text-2xl">💰</p>
+                            <p class="font-bold text-lg">Long-Term Profit (The "Blades")</p>
+                            <p class="text-sm">Guaranteed revenue from consumables.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-12 border-t-2 border-gray-200">
+
+        <section id="brand-showdown" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 5: Brand Showdown for a Small Family</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">We've narrowed it down to two compact, budget-friendly models ideal for a 2-person household. The choice comes down to initial cost vs. long-term DIY ease.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6 brand-card">
+                    <h3 class="text-2xl font-bold text-center">Kent Supreme Lite</h3>
+                    <p class="text-center font-semibold text-[#00A5E3] mb-4">(RO + UF + TDS Control)</p>
+                    <p class="text-5xl font-black text-center text-gray-800 my-4">~₹13,000</p>
+                    <ul class="space-y-2 text-sm pro-con-list">
+                        <li><strong>PRO:</strong> Larger 8L tank is convenient.</li>
+                        <li><strong>PRO:</strong> Service alarm is reportedly easy to reset with a physical button, making DIY a breeze.</li>
+                        <li class="cons"><strong>CON:</strong> Higher initial purchase price.</li>
+                        <li class="cons"><strong>CON:</strong> Lacks an in-built UV lamp for an extra layer of safety.</li>
+                    </ul>
+                    <div class="text-center mt-6 p-3 bg-blue-50 rounded-lg">
+                        <p class="font-bold">DIY Friendliness: <span class="text-green-600">HIGH</span></p>
+                        <p class="text-xs">Easiest path for long-term self-maintenance.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 brand-card">
+                    <h3 class="text-2xl font-bold text-center">Aquaguard Delight NXT</h3>
+                    <p class="text-center font-semibold text-[#00A5E3] mb-4">(RO + UV + UF)</p>
+                    <p class="text-5xl font-black text-center text-gray-800 my-4">~₹9,000</p>
+                     <ul class="space-y-2 text-sm pro-con-list">
+                        <li><strong>PRO:</strong> Extremely low initial price offers incredible value.</li>
+                        <li><strong>PRO:</strong> Includes all three major technologies (RO+UV+UF).</li>
+                        <li class="cons"><strong>CON:</strong> Smaller 6L tank.</li>
+                        <li class="cons"><strong>CON:</strong> Has an electronic "service lock" chip that can be challenging to bypass.</li>
+                    </ul>
+                     <div class="text-center mt-6 p-3 bg-yellow-50 rounded-lg">
+                        <p class="font-bold">DIY Friendliness: <span class="text-orange-600">MEDIUM-HIGH</span></p>
+                        <p class="text-xs">Requires more effort to override service lock.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <hr class="my-12 border-t-2 border-gray-200">
+        
+        <section id="diy-manual" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 6: Your Path to Self-Reliance</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">Escape the expensive service cycle. With a few tools and online guides, you can maintain your purifier for a fraction of the cost.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-4xl">🛠️</p>
+                        <h4 class="font-bold mt-2">1. Get Your Toolkit</h4>
+                        <p class="text-sm text-gray-600">TDS Meter, Spanner, Screwdriver, Teflon Tape.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-4xl">🛒</p>
+                        <h4 class="font-bold mt-2">2. Source Parts Online</h4>
+                        <p class="text-sm text-gray-600">Find filter kits on Amazon, Flipkart, or Filterkart for ~₹2,300.</p>
+                    </div>
+                     <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-4xl">🔧</p>
+                        <h4 class="font-bold mt-2">3. Perform Maintenance</h4>
+                        <p class="text-sm text-gray-600">Follow YouTube guides to change pre-filters and internal filters annually.</p>
+                    </div>
+                     <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="text-4xl">🔓</p>
+                        <h4 class="font-bold mt-2">4. Override The Lock</h4>
+                        <p class="text-sm text-gray-600">After warranty, find the reset button (Kent) or bypass chip (Aquaguard) to silence alarms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <hr class="my-12 border-t-2 border-gray-200">
+
+        <section id="final-verdict" class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Section 7: Final Verdict & Smart Shopping</h2>
+                <p class="max-w-3xl mx-auto mt-2 text-gray-600">Your choice depends on your TDS test results and your priority: saving money upfront or ensuring easier long-term DIY.</p>
+            </div>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-6 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">Choose the Aquaguard Delight NXT if...</h3>
+                    <p>...your primary goal is the **lowest possible initial cost**. It's an unbeatable value proposition, but be prepared to research how to bypass its service lock for future DIY savings.</p>
+                </div>
+                 <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-6 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">Choose the Kent Supreme Lite if...</h3>
+                    <p>...you're willing to pay a slight premium for **simpler long-term DIY management**. Its easier alarm reset makes it the more straightforward choice for committed self-servicers.</p>
+                </div>
+            </div>
+            <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+                 <h3 class="text-xl font-bold text-center mb-4">Pro Shopping Tips</h3>
+                 <ul class="list-disc list-inside text-gray-700 space-y-2 text-center max-w-md mx-auto">
+                    <li>Buy from reputable online retailers like Amazon, Flipkart, or Croma for the best prices and return policies.</li>
+                    <li>Look for deals during major sales events like Prime Day or Diwali sales.</li>
+                    <li>Stack offers: Use bank card discounts and No-Cost EMI options to save even more.</li>
+                    <li>Consider exchange offers on brand websites if you have an old purifier.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12 py-6">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2025 Smart Buyer's Infographics. All data synthesized from the "Definitive Water Purifier Buying Guide for Hyderabad" report.</p>
+            <p class="mt-1 text-gray-400">This infographic is for informational purposes only. Perform your own due diligence before making a purchase.</p>
+        </div>
+    </footer>
+
+    <script>
+        function wrapLabel(str, maxwidth) {
+            if (str.length <= maxwidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            let lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + words[i].length + 1 < maxwidth) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const sharedTooltipOptions = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            return Array.isArray(label) ? label.join(' ') : label;
+                        }
+                    }
+                }
+            }
+        };
+
+        const palette = {
+            blue: '#00A5E3',
+            teal: '#8DD7BF',
+            pink: '#FF96C5',
+            red: '#FF5768',
+            yellow: '#FFBF65'
+        };
+
+        const renderTdsChart = () => {
+            const ctx = document.getElementById('tdsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Kondapur', 'Nizampet', 'Madhapur', 'Kukatpally', 'Gachibowli', 'Ameenpur'],
+                    datasets: [{
+                        label: 'TDS Range (PPM)',
+                        data: [
+                            [250, 700],
+                            [350, 900],
+                            [220, 820],
+                            [200, 800],
+                            [250, 800],
+                            [200, 1200]
+                        ],
+                        backgroundColor: [
+                           'rgba(0, 165, 227, 0.6)',
+                           'rgba(255, 87, 104, 0.6)',
+                           'rgba(0, 165, 227, 0.6)',
+                           'rgba(255, 87, 104, 0.6)',
+                           'rgba(0, 165, 227, 0.6)',
+                           'rgba(255, 87, 104, 0.6)',
+                        ],
+                        borderColor: [
+                           '#00A5E3',
+                           '#FF5768',
+                           '#00A5E3',
+                           '#FF5768',
+                           '#00A5E3',
+                           '#FF5768',
+                        ],
+                        borderWidth: 2,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    ...sharedTooltipOptions,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'TDS in PPM (Parts Per Million)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        ...sharedTooltipOptions.plugins,
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                             ...sharedTooltipOptions.plugins.tooltip,
+                            callbacks: {
+                                ...sharedTooltipOptions.plugins.tooltip.callbacks,
+                                label: function(context) {
+                                    const raw = context.raw;
+                                    return `TDS Range: ${raw[0]} - ${raw[1]} PPM`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+        
+        const renderTcoChart = () => {
+            const ctx = document.getElementById('tcoChart').getContext('2d');
+            const labels = ['Kent Supreme Lite', 'Aquaguard Delight NXT'];
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels.map(label => wrapLabel(label, 16)),
+                    datasets: [
+                        {
+                            label: '5-Year TCO with AMC',
+                            data: [31000, 27000],
+                            backgroundColor: palette.red,
+                            borderColor: 'white',
+                            borderWidth: 2
+                        },
+                        {
+                            label: '5-Year TCO with DIY',
+                            data: [22200, 18600],
+                            backgroundColor: palette.teal,
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    ...sharedTooltipOptions,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Cost in INR (₹)'
+                            }
+                        }
+                    },
+                     plugins: {
+                        ...sharedTooltipOptions.plugins,
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                           position: 'bottom',
+                        },
+                        tooltip: {
+                           ...sharedTooltipOptions.plugins.tooltip,
+                            callbacks: {
+                                ...sharedTooltipOptions.plugins.tooltip.callbacks,
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+        
+        window.onload = () => {
+            renderTdsChart();
+            renderTcoChart();
+        };
+    </script>
+</body>
+</html>
