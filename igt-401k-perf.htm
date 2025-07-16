@@ -1,130 +1,187 @@
-import React, { useState, useMemo } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Performance Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Use Inter as the default font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
 
-// Main App Component
-export default function App() {
-    // Raw data for the funds
-    const fundsData = [
-        { name: 'FID CONTRA POOL CL A', oneYear: 20.9, threeYear: 28.11, fiveYear: 17.89 },
-        { name: 'SS S&P 500 INDEX K', oneYear: 15.16, threeYear: 19.7, fiveYear: 16.62 },
-        { name: 'VANG WINDSOR II ADM', oneYear: 10.22, threeYear: 15.45, fiveYear: 15.91 },
-        { name: 'SS RSL SMMDCP IDX K', oneYear: 16.09, threeYear: 15.5, fiveYear: 12.22 },
-        { name: 'TRP US MDCP VAL EQ', oneYear: 5.49, threeYear: 13.04, fiveYear: 15.32 },
-        { name: 'WFLD MID CAP GR EQ C', oneYear: 24.75, threeYear: 18.32, fiveYear: 12.14 },
-        { name: 'DFA US SMALL CAP I', oneYear: 7.79, threeYear: 11.33, fiveYear: 14.36 },
-        { name: 'HRDG LVNR INTL EQ M', oneYear: 14.86, threeYear: 12.28, fiveYear: 8.09 },
-        { name: 'SS GACEQ EX-US IDX K', oneYear: 18.09, threeYear: 14.11, fiveYear: 10.34 },
-        { name: 'TRP LRG CAP GR TR A', oneYear: 16.01, threeYear: 26.06, fiveYear: 15.51 },
-        { name: 'PIF DVRSD REAL AST 3', oneYear: 9.42, threeYear: 4.21, fiveYear: 7.98 },
-        { name: 'TRP RETIRE 2005 F', oneYear: 9.02, threeYear: 8.5, fiveYear: 5.95 },
-        { name: 'TRP RETIRE 2010 F', oneYear: 9.29, threeYear: 8.95, fiveYear: 6.43 },
-        { name: 'TRP RETIRE 2015 F', oneYear: 9.52, threeYear: 9.34, fiveYear: 6.94 },
-        { name: 'TRP RETIRE 2020 F', oneYear: 9.73, threeYear: 9.72, fiveYear: 7.45 },
-        { name: 'TRP RETIRE 2025 F', oneYear: 9.98, threeYear: 10.43, fiveYear: 8.23 },
-        { name: 'TRP RETIRE 2030 F', oneYear: 10.7, threeYear: 11.69, fiveYear: 9.26 },
-        { name: 'TRP RETIRE 2035 F', oneYear: 11.56, threeYear: 13.12, fiveYear: 10.38 },
-        { name: 'TRP RETIRE 2040 F', oneYear: 12.2, threeYear: 14.31, fiveYear: 11.32 },
-        { name: 'TRP RETIRE 2045 F', oneYear: 12.73, threeYear: 15.14, fiveYear: 12.05 },
-        { name: 'TRP RETIRE 2050 F', oneYear: 12.96, threeYear: 15.4, fiveYear: 12.2 },
-        { name: 'TRP RETIRE 2055 F', oneYear: 13.01, threeYear: 15.46, fiveYear: 12.21 },
-        { name: 'TRP RETIRE 2060 F', oneYear: 12.98, threeYear: 15.42, fiveYear: 12.21 },
-        { name: 'TRP RETIRE 2065 F', oneYear: 12.93, threeYear: 15.42, fiveYear: null },
-        { name: 'GALLIARD STBLE RTN E', oneYear: 3.1, threeYear: 2.78, fiveYear: 2.41 },
-        { name: 'LS CORE PLUS BOND F', oneYear: 6.4, threeYear: null, fiveYear: null },
-        { name: 'SS US BOND INDEX K', oneYear: 6.08, threeYear: 2.53, fiveYear: -0.76 },
-        { name: 'FIMM GOVT INST', oneYear: 4.69, threeYear: 4.59, fiveYear: 2.77 },
-    ];
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 tracking-tight">Fund Performance Dashboard</h1>
+            <p class="text-lg text-gray-600 mt-2">Comparing Top 10 Fund Returns</p>
+        </header>
 
-    // State to manage the active timeframe
-    const [timeframe, setTimeframe] = useState('oneYear');
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <!-- Navigation Tabs -->
+            <div class="flex justify-center border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-6" id="timeframe-nav">
+                    <button data-timeframe="oneYear" class="timeframe-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out border-blue-500 text-blue-600">
+                        1-Year Returns
+                    </button>
+                    <button data-timeframe="threeYear" class="timeframe-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        3-Year Returns
+                    </button>
+                    <button data-timeframe="fiveYear" class="timeframe-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        5-Year Returns
+                    </button>
+                </nav>
+            </div>
 
-    // Function to process and sort data for the charts
-    const getTopFunds = (data, key, count = 10) => {
-        return data
-            .filter(fund => fund[key] !== null && fund[key] !== undefined)
-            .sort((a, b) => b[key] - a[key])
-            .slice(0, count);
-    };
-
-    // Memoized chart data to avoid recalculation on every render
-    const chartData = useMemo(() => ({
-        oneYear: getTopFunds(fundsData, 'oneYear'),
-        threeYear: getTopFunds(fundsData, 'threeYear'),
-        fiveYear: getTopFunds(fundsData, 'fiveYear'),
-    }), [fundsData]);
-
-    const activeData = chartData[timeframe];
-    const maxReturn = activeData.length > 0 ? Math.max(...activeData.map(d => d[timeframe])) : 0;
-
-    // Color palette for the bars
-    const colors = [
-        '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe',
-        '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd'
-    ];
-
-    return (
-        <div className="bg-gray-50 min-h-screen font-sans">
-            <div className="container mx-auto p-4 sm:p-6 md:p-8">
-                <header className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 tracking-tight">Fund Performance Dashboard</h1>
-                    <p className="text-lg text-gray-600 mt-2">Comparing Top 10 Fund Returns</p>
-                </header>
-
-                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                    <div className="flex justify-center border-b border-gray-200 mb-6">
-                        <nav className="-mb-px flex space-x-6">
-                            {['oneYear', 'threeYear', 'fiveYear'].map((t) => (
-                                <button
-                                    key={t}
-                                    onClick={() => setTimeframe(t)}
-                                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out ${
-                                        timeframe === t
-                                            ? 'border-blue-500 text-blue-600'
-                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                    }`}
-                                >
-                                    {t === 'oneYear' && '1-Year Returns'}
-                                    {t === 'threeYear' && '3-Year Returns'}
-                                    {t === 'fiveYear' && '5-Year Returns'}
-                                </button>
-                            ))}
-                        </nav>
-                    </div>
-
-                    <div className="w-full overflow-x-auto">
-                        <div className="min-w-[600px]">
-                            <h2 className="text-2xl font-semibold text-gray-700 mb-6 text-center">
-                                Top 10 Performers - {
-                                    { oneYear: '1-Year', threeYear: '3-Year', fiveYear: '5-Year' }[timeframe]
-                                } Returns
-                            </h2>
-                            <div className="space-y-4">
-                                {activeData.map((fund, index) => (
-                                    <div key={fund.name} className="flex items-center group">
-                                        <div className="w-1/3 pr-4 text-right">
-                                            <p className="text-sm font-medium text-gray-600 truncate">{fund.name}</p>
-                                        </div>
-                                        <div className="w-2/3">
-                                            <div className="flex items-center">
-                                                <div
-                                                    className="h-8 rounded-r-lg transition-all duration-500 ease-out"
-                                                    style={{
-                                                        width: `${(fund[timeframe] / maxReturn) * 100}%`,
-                                                        backgroundColor: colors[index % colors.length]
-                                                    }}
-                                                ></div>
-                                                <span className="ml-3 text-sm font-bold text-gray-700">{fund[timeframe].toFixed(2)}%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+            <!-- Chart Display Area -->
+            <div class="w-full overflow-x-auto">
+                <div class="min-w-[600px]">
+                    <h2 id="chart-title" class="text-2xl font-semibold text-gray-700 mb-6 text-center">
+                        Top 10 Performers - 1-Year Returns
+                    </h2>
+                    <div id="chart-container" class="space-y-4">
+                        <!-- Chart bars will be dynamically inserted here -->
                     </div>
                 </div>
-                <footer className="text-center mt-8 text-sm text-gray-500">
-                    <p>Data as of June 30, 2025. All returns are annualized.</p>
-                </footer>
             </div>
         </div>
-    );
-}
+
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>Data as of June 30, 2025. All returns are annualized.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA ---
+            const fundsData = [
+                { name: 'FID CONTRA POOL CL A', oneYear: 20.9, threeYear: 28.11, fiveYear: 17.89 },
+                { name: 'SS S&P 500 INDEX K', oneYear: 15.16, threeYear: 19.7, fiveYear: 16.62 },
+                { name: 'VANG WINDSOR II ADM', oneYear: 10.22, threeYear: 15.45, fiveYear: 15.91 },
+                { name: 'SS RSL SMMDCP IDX K', oneYear: 16.09, threeYear: 15.5, fiveYear: 12.22 },
+                { name: 'TRP US MDCP VAL EQ', oneYear: 5.49, threeYear: 13.04, fiveYear: 15.32 },
+                { name: 'WFLD MID CAP GR EQ C', oneYear: 24.75, threeYear: 18.32, fiveYear: 12.14 },
+                { name: 'DFA US SMALL CAP I', oneYear: 7.79, threeYear: 11.33, fiveYear: 14.36 },
+                { name: 'HRDG LVNR INTL EQ M', oneYear: 14.86, threeYear: 12.28, fiveYear: 8.09 },
+                { name: 'SS GACEQ EX-US IDX K', oneYear: 18.09, threeYear: 14.11, fiveYear: 10.34 },
+                { name: 'TRP LRG CAP GR TR A', oneYear: 16.01, threeYear: 26.06, fiveYear: 15.51 },
+                { name: 'PIF DVRSD REAL AST 3', oneYear: 9.42, threeYear: 4.21, fiveYear: 7.98 },
+                { name: 'TRP RETIRE 2005 F', oneYear: 9.02, threeYear: 8.5, fiveYear: 5.95 },
+                { name: 'TRP RETIRE 2010 F', oneYear: 9.29, threeYear: 8.95, fiveYear: 6.43 },
+                { name: 'TRP RETIRE 2015 F', oneYear: 9.52, threeYear: 9.34, fiveYear: 6.94 },
+                { name: 'TRP RETIRE 2020 F', oneYear: 9.73, threeYear: 9.72, fiveYear: 7.45 },
+                { name: 'TRP RETIRE 2025 F', oneYear: 9.98, threeYear: 10.43, fiveYear: 8.23 },
+                { name: 'TRP RETIRE 2030 F', oneYear: 10.7, threeYear: 11.69, fiveYear: 9.26 },
+                { name: 'TRP RETIRE 2035 F', oneYear: 11.56, threeYear: 13.12, fiveYear: 10.38 },
+                { name: 'TRP RETIRE 2040 F', oneYear: 12.2, threeYear: 14.31, fiveYear: 11.32 },
+                { name: 'TRP RETIRE 2045 F', oneYear: 12.73, threeYear: 15.14, fiveYear: 12.05 },
+                { name: 'TRP RETIRE 2050 F', oneYear: 12.96, threeYear: 15.4, fiveYear: 12.2 },
+                { name: 'TRP RETIRE 2055 F', oneYear: 13.01, threeYear: 15.46, fiveYear: 12.21 },
+                { name: 'TRP RETIRE 2060 F', oneYear: 12.98, threeYear: 15.42, fiveYear: 12.21 },
+                { name: 'TRP RETIRE 2065 F', oneYear: 12.93, threeYear: 15.42, fiveYear: null },
+                { name: 'GALLIARD STBLE RTN E', oneYear: 3.1, threeYear: 2.78, fiveYear: 2.41 },
+                { name: 'LS CORE PLUS BOND F', oneYear: 6.4, threeYear: null, fiveYear: null },
+                { name: 'SS US BOND INDEX K', oneYear: 6.08, threeYear: 2.53, fiveYear: -0.76 },
+                { name: 'FIMM GOVT INST', oneYear: 4.69, threeYear: 4.59, fiveYear: 2.77 },
+            ];
+
+            const colors = [
+                '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe',
+                '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd'
+            ];
+
+            // --- DOM ELEMENTS ---
+            const chartContainer = document.getElementById('chart-container');
+            const chartTitle = document.getElementById('chart-title');
+            const nav = document.getElementById('timeframe-nav');
+            const buttons = nav.querySelectorAll('.timeframe-btn');
+
+            // --- FUNCTIONS ---
+
+            /**
+             * Filters, sorts, and gets the top N funds from the data.
+             * @param {string} key - The timeframe key (e.g., 'oneYear').
+             * @param {number} count - The number of top funds to return.
+             * @returns {Array} - The sorted array of top funds.
+             */
+            function getTopFunds(key, count = 10) {
+                return fundsData
+                    .filter(fund => fund[key] !== null && fund[key] !== undefined)
+                    .sort((a, b) => b[key] - a[key])
+                    .slice(0, count);
+            }
+
+            /**
+             * Renders the chart for a given timeframe.
+             * @param {string} timeframe - The selected timeframe ('oneYear', 'threeYear', 'fiveYear').
+             */
+            function renderChart(timeframe) {
+                const activeData = getTopFunds(timeframe);
+                const maxReturn = activeData.length > 0 ? Math.max(...activeData.map(d => d[timeframe])) : 0;
+                
+                // Clear previous chart
+                chartContainer.innerHTML = '';
+
+                // Update chart title
+                const titleMap = { oneYear: '1-Year', threeYear: '3-Year', fiveYear: '5-Year' };
+                chartTitle.textContent = `Top 10 Performers - ${titleMap[timeframe]} Returns`;
+
+                // Generate and append new chart bars
+                activeData.forEach((fund, index) => {
+                    const barWidth = maxReturn > 0 ? (fund[timeframe] / maxReturn) * 100 : 0;
+
+                    const fundRow = document.createElement('div');
+                    fundRow.className = 'flex items-center group';
+                    fundRow.innerHTML = `
+                        <div class="w-1/3 pr-4 text-right">
+                            <p class="text-sm font-medium text-gray-600 truncate">${fund.name}</p>
+                        </div>
+                        <div class="w-2/3">
+                            <div class="flex items-center">
+                                <div class="h-8 rounded-r-lg transition-all duration-500 ease-out" style="width: ${barWidth}%; background-color: ${colors[index % colors.length]};"></div>
+                                <span class="ml-3 text-sm font-bold text-gray-700">${fund[timeframe].toFixed(2)}%</span>
+                            </div>
+                        </div>
+                    `;
+                    chartContainer.appendChild(fundRow);
+                });
+            }
+            
+            /**
+             * Handles click events on the navigation buttons.
+             * @param {Event} e - The click event.
+             */
+            function handleNavClick(e) {
+                const clickedButton = e.target.closest('.timeframe-btn');
+                if (!clickedButton) return;
+
+                const timeframe = clickedButton.dataset.timeframe;
+
+                // Update button styles
+                buttons.forEach(button => {
+                    button.classList.remove('border-blue-500', 'text-blue-600');
+                    button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                });
+                clickedButton.classList.add('border-blue-500', 'text-blue-600');
+                clickedButton.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+
+                // Re-render the chart
+                renderChart(timeframe);
+            }
+
+            // --- INITIALIZATION ---
+            nav.addEventListener('click', handleNavClick);
+            renderChart('oneYear'); // Initial render
+        });
+    </script>
+
+</body>
+</html>
