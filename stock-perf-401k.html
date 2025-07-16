@@ -3,291 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>401(k) Performance Analysis & Growth Strategy</title>
+    <title>Fund Performance Dashboard</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Custom styles to enhance the look */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark gray background */
+            color: #f3f4f6; /* Light gray text */
         }
         .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 500px;
-            max-height: 60vh;
+            background-color: #1f2937; /* Lighter dark background for cards */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-title {
+            color: #d1d5db; /* Lighter text for titles */
         }
     </style>
 </head>
-<body class="bg-[#F2FFFF]">
+<body class="antialiased">
 
-    <div class="container mx-auto p-4 md:p-8">
-
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-[#00A1E4] mb-2">Maximizing Your 401(k) for Aggressive Growth</h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An analysis of your investment options to identify top historical performers and find a suitable proxy for a high-growth, QQQ-like strategy.</p>
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white">Fund Performance Analysis</h1>
+            <p class="text-lg text-gray-400 mt-2">Top 10 Performers by Time Period</p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 md:p-8">
-                <h2 class="text-2xl font-bold text-[#00BADE] mb-4">Long-Term Leaders: 5-Year Annualized Returns</h2>
-                <p class="text-gray-600 mb-6">The 5-year period smooths out short-term market noise, revealing funds with strong, sustained performance. Over this horizon, large-cap equity funds have been the clear winners, demonstrating the power of long-term, growth-oriented investing. The Fidelity Contrafund stands out as the premier performer.</p>
-                <div class="chart-container">
-                    <canvas id="fiveYearChart"></canvas>
-                </div>
+        <!-- Grid for charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+            <!-- 1-Year Performance Chart -->
+            <div class="chart-container">
+                <h2 class="text-xl font-semibold mb-4 chart-title">Top 10 - 1-Year Performance</h2>
+                <canvas id="oneYearChart"></canvas>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                <h2 class="text-2xl font-bold text-[#00BADE] mb-4">Mid-Term Momentum: 3-Year Annualized Returns</h2>
-                <p class="text-gray-600 mb-6">This period captures a unique market environment of rotation and rising rates. Fidelity Contrafund's outperformance is even more pronounced here, showcasing the significant value added by its active management and concentration in high-growth technology leaders.</p>
-                <div class="chart-container">
-                    <canvas id="threeYearChart"></canvas>
-                </div>
+            <!-- 3-Year Performance Chart -->
+            <div class="chart-container">
+                <h2 class="text-xl font-semibold mb-4 chart-title">Top 10 - 3-Year Performance</h2>
+                <canvas id="threeYearChart"></canvas>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                <h2 class="text-2xl font-bold text-[#00BADE] mb-4">Short-Term Snapshot: 1-Year Annualized Returns</h2>
-                <p class="text-gray-600 mb-6">The most recent year shows a continuation of the growth trend, with both large and mid-cap growth funds delivering powerful returns. This highlights a strong, broadening market rally and the continued momentum of growth-focused investment styles.</p>
-                <div class="chart-container">
-                    <canvas id="oneYearChart"></canvas>
-                </div>
+            <!-- 5-Year Performance Chart -->
+            <div class="chart-container">
+                <h2 class="text-xl font-semibold mb-4 chart-title">Top 10 - 5-Year Performance</h2>
+                <canvas id="fiveYearChart"></canvas>
             </div>
-
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 md:p-8">
-                <h2 class="text-2xl font-bold text-[#00D2D2] mb-2 text-center">Finding Your QQQ Alternative</h2>
-                <p class="text-gray-600 mb-8 text-center max-w-3xl mx-auto">Your goal is to find a fund that mimics the Invesco QQQ Trust's high-growth, tech-focused profile. QQQ tracks the 100 largest non-financial companies on the Nasdaq. By screening your 401(k) options, we can identify the best available proxy.</p>
-
-                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
-                    <div class="p-4 bg-gray-100 rounded-lg text-center">
-                        <div class="text-3xl font-bold text-[#00A1E4]">28</div>
-                        <div class="text-sm text-gray-500">Total Funds</div>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-400">&rarr;</div>
-                    <div class="p-4 bg-gray-100 rounded-lg text-center">
-                        <div class="text-3xl font-bold text-[#00BADE]">9</div>
-                        <div class="text-sm text-gray-500">Stock Funds</div>
-                    </div>
-                    <div class="text-2xl font-bold text-gray-400">&rarr;</div>
-                    <div class="p-4 bg-gray-100 rounded-lg text-center">
-                        <div class="text-3xl font-bold text-[#00D2D2]">2</div>
-                        <div class="text-sm text-gray-500">Large-Cap Growth</div>
-                    </div>
-                     <div class="text-2xl font-bold text-gray-400">&rarr;</div>
-                    <div class="p-4 bg-[#89E6E6] rounded-lg text-center ring-4 ring-[#00D2D2]">
-                        <div class="text-3xl font-bold text-teal-800">1</div>
-                        <div class="text-sm text-teal-600">Best Proxy: FCNTX</div>
-                    </div>
-                </div>
-                <p class="text-center text-gray-500 mt-4 text-sm">Screening eliminates bond, stable value, blended, and non-growth stock funds.</p>
-            </div>
-            
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 md:p-8">
-                <h2 class="text-2xl font-bold text-[#00A1E4] mb-4 text-center">Head-to-Head: Fidelity Contrafund (FCNTX) vs. QQQ</h2>
-                <p class="text-gray-600 mb-6 max-w-3xl mx-auto text-center">While QQQ is a passive ETF, Fidelity Contrafund is an actively managed fund. The analysis shows FCNTX is an outstanding proxy, sharing a similar investment style and concentration in mega-cap leaders, with a history of outperformance that has justified its higher fee.</p>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metric</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invesco QQQ</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fidelity Contrafund (FCNTX)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Investment Style</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Large Cap Growth</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Large Cap Growth</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Management</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Passive (Index Tracking)</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Active (Manager Skill)</td>
-                            </tr>
-                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Top 5 Holdings</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">NVIDIA, MSFT, AAPL, AMZN, AVGO</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">META, BRK.A, NVIDIA, MSFT, AMZN</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">% in Top 10 Holdings</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">~51%</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">~57%</td>
-                            </tr>
-                            <tr class="bg-teal-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#00A1E4]">Conclusion</td>
-                                <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-700">FCNTX is an excellent, high-conviction proxy for a QQQ-like strategy within your plan.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </main>
-
+        </div>
     </div>
 
     <script>
-        const brilliantBlues = ['#00A1E4', '#00BADE', '#00D2D2', '#89E6E6'];
-        
-        function wrapLabel(str, maxWidth) {
-            if (str.length <= maxWidth) {
-                return str;
-            }
-            const words = str.split(' ');
-            const lines = [];
-            let currentLine = '';
-            for (const word of words) {
-                if ((currentLine + ' ' + word).trim().length > maxWidth) {
-                    lines.push(currentLine.trim());
-                    currentLine = word;
-                } else {
-                    currentLine = (currentLine + ' ' + word).trim();
-                }
-            }
-            if (currentLine) {
-                lines.push(currentLine.trim());
-            }
-            return lines;
+        // The raw data provided by the user
+        const fundData = [
+            {'Name': 'FID 500 INDEX (FXAIX)', 'Asset Class': 'Stock Investments', 'Category': 'Large Cap', '1 Year': '15.15%', '3 Year': '19.70%', '5 Year': '16.63%', '10 Year/LOF': '13.63%'},
+            {'Name': 'FID CONTRAFUND K6 (FLCNX)', 'Asset Class': 'Stock Investments', 'Category': 'Large Cap', '1 Year': '21.24%', '3 Year': '28.44%', '5 Year': '17.95%', '10 Year/LOF': '17.20%'},
+            {'Name': 'FID LG CAP GR IDX (FSPGX)', 'Asset Class': 'Stock Investments', 'Category': 'Large Cap', '1 Year': '17.17%', '3 Year': '25.74%', '5 Year': '18.12%', '10 Year/LOF': '18.34%'},
+            {'Name': 'FID TOTAL MKT IDX (FSKAX)', 'Asset Class': 'Stock Investments', 'Category': 'Large Cap', '1 Year': '15.22%', '3 Year': '19.09%', '5 Year': '15.89%', '10 Year/LOF': '12.90%'},
+            {'Name': 'JPM EQUITY INCOME R5 (OIERX)', 'Asset Class': 'Stock Investments', 'Category': 'Large Cap', '1 Year': '13.62%', '3 Year': '10.61%', '5 Year': '13.31%', '10 Year/LOF': '10.06%'},
+            {'Name': 'FID EXTD MKT IDX (FSMAX)', 'Asset Class': 'Stock Investments', 'Category': 'Mid-Cap', '1 Year': '15.65%', '3 Year': '15.27%', '5 Year': '11.64%', '10 Year/LOF': '9.17%'},
+            {'Name': 'JPM MID CAP GRTH R6 (JMGMX)', 'Asset Class': 'Stock Investments', 'Category': 'Mid-Cap', '1 Year': '15.61%', '3 Year': '16.48%', '5 Year': '10.28%', '10 Year/LOF': '11.41%'},
+            {'Name': 'JPM MIDCAP VALUE L (FLMVX)', 'Asset Class': 'Stock Investments', 'Category': 'Mid-Cap', '1 Year': '10.77%', '3 Year': '10.69%', '5 Year': '13.78%', '10 Year/LOF': '7.96%'},
+            {'Name': 'AB SM CAP GRTH I (QUAIX)', 'Asset Class': 'Stock Investments', 'Category': 'Small Cap', '1 Year': '9.37%', '3 Year': '11.23%', '5 Year': '5.11%', '10 Year/LOF': '9.52%'},
+            {'Name': 'AM CENT SMCAP VAL R6 (ASVDX)', 'Asset Class': 'Stock Investments', 'Category': 'Small Cap', '1 Year': '0.37%', '3 Year': '6.21%', '5 Year': '13.85%', '10 Year/LOF': '8.20%'},
+            {'Name': 'FID SM CAP IDX (FSSNX)', 'Asset Class': 'Stock Investments', 'Category': 'Small Cap', '1 Year': '7.84%', '3 Year': '10.17%', '5 Year': '10.13%', '10 Year/LOF': '7.27%'},
+            {'Name': 'FID INTL GROWTH (FIGFX)', 'Asset Class': 'Stock Investments', 'Category': 'International', '1 Year': '11.79%', '3 Year': '14.88%', '5 Year': '8.88%', '10 Year/LOF': '7.93%'},
+            {'Name': 'FID INTL INDEX (FSPSX)', 'Asset Class': 'Stock Investments', 'Category': 'International', '1 Year': '18.55%', '3 Year': '16.23%', '5 Year': '11.41%', '10 Year/LOF': '6.71%'},
+            {'Name': 'MFS INTL DIVRSN R6 (MDIZX)', 'Asset Class': 'Stock Investments', 'Category': 'International', '1 Year': '18.79%', '3 Year': '14.26%', '5 Year': '9.49%', '10 Year/LOF': '7.72%'},
+            {'Name': 'FID FREEDOM 2010 K (FSNKX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '8.78%', '3 Year': '6.81%', '5 Year': '4.62%', '10 Year/LOF': '4.94%'},
+            {'Name': 'FID FREEDOM 2015 K (FSNLX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '9.58%', '3 Year': '8.04%', '5 Year': '5.69%', '10 Year/LOF': '5.66%'},
+            {'Name': 'FID FREEDOM 2020 K (FSNOX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '10.51%', '3 Year': '9.27%', '5 Year': '6.71%', '10 Year/LOF': '6.29%'},
+            {'Name': 'FID FREEDOM 2025 K (FSNPX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '11.41%', '3 Year': '10.35%', '5 Year': '7.65%', '10 Year/LOF': '6.85%'},
+            {'Name': 'FID FREEDOM 2030 K (FSNQX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '12.07%', '3 Year': '11.44%', '5 Year': '8.78%', '10 Year/LOF': '7.66%'},
+            {'Name': 'FID FREEDOM 2035 K (FSNUX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '13.03%', '3 Year': '13.38%', '5 Year': '10.75%', '10 Year/LOF': '8.72%'},
+            {'Name': 'FID FREEDOM 2040 K (FSNVX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '14.62%', '3 Year': '15.58%', '5 Year': '12.52%', '10 Year/LOF': '9.53%'},
+            {'Name': 'FID FREEDOM 2045 K (FSNZX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.40%', '3 Year': '16.28%', '5 Year': '12.90%', '10 Year/LOF': '9.71%'},
+            {'Name': 'FID FREEDOM 2050 K (FNSBX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.40%', '3 Year': '16.30%', '5 Year': '12.90%', '10 Year/LOF': '9.71%'},
+            {'Name': 'FID FREEDOM 2055 K (FNSDX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.40%', '3 Year': '16.31%', '5 Year': '12.91%', '10 Year/LOF': '9.72%'},
+            {'Name': 'FID FREEDOM 2060 K (FNSFX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.39%', '3 Year': '16.29%', '5 Year': '12.90%', '10 Year/LOF': '9.70%'},
+            {'Name': 'FID FREEDOM 2065 K (FFSDX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.42%', '3 Year': '16.30%', '5 Year': '12.89%', '10 Year/LOF': '11.18%'},
+            {'Name': 'FID FREEDOM 2070 K (FRBEX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '15.11%', '3 Year': 'N/A', '5 Year': 'N/A', '10 Year/LOF': '15.11%'},
+            {'Name': 'FID FREEDOM INC K (FNSHX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '8.17%', '3 Year': '5.65%', '5 Year': '3.32%', '10 Year/LOF': '3.81%'},
+            {'Name': 'VANG BAL INDEX ADM (VBIAX)', 'Asset Class': 'Blended Fund Investments*', 'Category': 'N/A', '1 Year': '11.95%', '3 Year': '12.47%', '5 Year': '9.20%', '10 Year/LOF': '8.62%'},
+            {'Name': 'FID US BOND IDX (FXNAX)', 'Asset Class': 'Bond Investments', 'Category': 'Income', '1 Year': '5.98%', '3 Year': '2.53%', '5 Year': '-0.79%', '10 Year/LOF': '1.73%'},
+            {'Name': 'JPM CORE PLUS BND R6 (JCPUX)', 'Asset Class': 'Bond Investments', 'Category': 'Income', '1 Year': '6.88%', '3 Year': '3.58%', '5 Year': '0.50%', '10 Year/LOF': '2.41%'},
+            {'Name': 'PIM REAL RETURN INST (PRRIX)', 'Asset Class': 'Bond Investments', 'Category': 'Income', '1 Year': '6.69%', '3 Year': '2.87%', '5 Year': '1.95%', '10 Year/LOF': '2.84%'},
+            {'Name': 'NYL ANCHOR ACCOUNT', 'Asset Class': 'Bond Investments', 'Category': 'N/A', '1 Year': 'N/A', '3 Year': 'N/A', '5 Year': 'N/A', '10 Year/LOF': 'N/A'}
+        ];
+
+        /**
+         * Extracts the ticker symbol from the fund name string.
+         * @param {string} name - The full name of the fund, e.g., "FID 500 INDEX (FXAIX)".
+         * @returns {string} The extracted ticker symbol or the original name if no symbol is found.
+         */
+        function getTicker(name) {
+            const match = name.match(/\(([^)]+)\)/);
+            return match ? match[1] : name;
         }
 
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            let label = item.chart.data.labels[item.dataIndex];
-            return Array.isArray(label) ? label.join(' ') : label;
-        };
+        /**
+         * Processes and sorts the fund data for a specific time period.
+         * @param {string} period - The key for the time period (e.g., '1 Year', '3 Year').
+         * @returns {Array} An array of the top 10 funds for that period.
+         */
+        function getTopPerformers(period) {
+            return fundData
+                .map(fund => ({
+                    name: getTicker(fund.Name),
+                    performance: parseFloat(fund[period]) || -Infinity // Handle 'N/A' by treating as lowest value
+                }))
+                .filter(fund => fund.performance > -Infinity) // Filter out funds with 'N/A'
+                .sort((a, b) => b.performance - a.performance) // Sort in descending order
+                .slice(0, 10); // Get the top 10
+        }
 
-        const createChart = (ctx, type, data, options) => {
-            return new Chart(ctx, { type, data, options });
-        };
-        
-        const baseChartOptions = (title) => ({
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: value => `${value}%`,
-                        color: '#4b5563',
-                        font: { weight: '500' }
-                    },
-                    grid: {
-                        color: '#e5e7eb'
-                    }
+        /**
+         * Creates a bar chart using Chart.js.
+         * @param {string} canvasId - The ID of the canvas element.
+         * @param {Array} data - The data to be plotted.
+         * @param {string} label - The label for the dataset.
+         */
+        function createChart(canvasId, data, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Gradient fill for the bars
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+            gradient.addColorStop(1, 'rgba(37, 99, 235, 0.8)');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.name),
+                    datasets: [{
+                        label: label,
+                        data: data.map(item => item.performance),
+                        backgroundColor: gradient,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                    }]
                 },
-                y: {
-                    ticks: {
-                        color: '#1f2937',
-                        font: { weight: '600' }
+                options: {
+                    indexAxis: 'y', // Horizontal bar chart
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Hide legend as title is sufficient
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toFixed(2)}%`;
+                                }
+                            }
+                        }
                     },
-                     grid: {
-                        display: false
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Performance (%)',
+                                color: '#9ca3af'
+                            },
+                            ticks: {
+                                color: '#9ca3af'
+                            },
+                             grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#d1d5db'
+                            },
+                             grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: title,
-                    font: { size: 16, weight: 'bold' },
-                    color: '#374151'
-                },
-                tooltip: {
-                    callbacks: {
-                        title: tooltipTitleCallback,
-                        label: context => `${context.dataset.label}: ${context.parsed.x.toFixed(2)}%`
-                    },
-                    backgroundColor: '#00A1E4',
-                    titleFont: { size: 14, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    padding: 10,
-                    cornerRadius: 6
-                }
-            }
+            });
+        }
+
+        // Wait for the DOM to be fully loaded before creating charts
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get top performers for each period
+            const topOneYear = getTopPerformers('1 Year');
+            const topThreeYear = getTopPerformers('3 Year');
+            const topFiveYear = getTopPerformers('5 Year');
+
+            // Set a fixed height for chart containers to prevent layout shifts
+            document.getElementById('oneYearChart').parentElement.style.height = '500px';
+            document.getElementById('threeYearChart').parentElement.style.height = '500px';
+            document.getElementById('fiveYearChart').parentElement.style.height = '500px';
+
+            // Create the charts
+            createChart('oneYearChart', topOneYear, '1-Year Return');
+            createChart('threeYearChart', topThreeYear, '3-Year Return');
+            createChart('fiveYearChart', topFiveYear, '5-Year Return');
         });
-
-        const fiveYearData = [
-            { label: 'FID CONTRA POOL CL A', value: 17.99 },
-            { label: 'SS S&P 500 INDEX K', value: 16.37 },
-            { label: 'VANG WINDSR II ADM', value: 15.91 },
-            { label: 'TRP US MDCP VAL EQ', value: 15.22 },
-            { label: 'SS RSL SMMDCP IDX K', value: 12.60 },
-            { label: 'TRP RETIRE 2060 F', value: 12.21 },
-            { label: 'WFLD MID CAP GR EQ C', value: 12.14 },
-            { label: 'TRP RETIRE 2055 F', value: 11.94 },
-            { label: 'TRP RETIRE 2050 F', value: 11.93 },
-            { label: 'TRP RETIRE 2045 F', value: 11.79 },
-        ].sort((a, b) => b.value - a.value);
-
-        const threeYearData = [
-            { label: 'FID CONTRA POOL CL A', value: 28.39 },
-            { label: 'SS S&P 500 INDEX K', value: 19.49 },
-            { label: 'VANG WINDSR II ADM', value: 15.45 },
-            { label: 'TRP RETIRE 2060 F', value: 15.42 },
-            { label: 'TRP RETIRE 2055 F', value: 15.09 },
-            { label: 'TRP RETIRE 2050 F', value: 15.08 },
-            { label: 'TRP RETIRE 2065 F', value: 15.06 },
-            { label: 'TRP RETIRE 2045 F', value: 14.81 },
-            { label: 'SS RSL SMMDCP IDX K', value: 14.80 },
-            { label: 'TRP RETIRE 2040 F', value: 14.00 },
-        ].sort((a, b) => b.value - a.value);
-
-        const oneYearData = [
-            { label: 'WFLD MID CAP GR EQ C', value: 21.36 },
-            { label: 'FID CONTRA POOL CL A', value: 21.01 },
-            { label: 'SS RSL SMMDCP IDX K', value: 19.40 },
-            { label: 'SS GACEQ EX-US IDX K', value: 17.50 },
-            { label: 'SS S&P 500 INDEX K', value: 15.05 },
-            { label: 'TRP RETIRE 2055 F', value: 12.73 },
-            { label: 'TRP RETIRE 2065 F', value: 12.70 },
-            { label: 'TRP RETIRE 2050 F', value: 12.68 },
-            { label: 'TRP RETIRE 2045 F', value: 12.50 },
-            { label: 'TRP RETIRE 2040 F', value: 12.00 },
-        ].sort((a, b) => b.value - a.value);
-        
-        const processChartData = (data) => ({
-            labels: data.map(item => wrapLabel(item.label, 20)),
-            datasets: [{
-                label: 'Annualized Return',
-                data: data.map(item => item.value),
-                backgroundColor: data.map((_, i) => brilliantBlues[i % brilliantBlues.length]),
-                borderColor: data.map((_, i) => brilliantBlues[i % brilliantBlues.length]),
-                borderWidth: 1,
-                borderRadius: 4
-            }]
-        });
-
-        createChart(
-            document.getElementById('fiveYearChart').getContext('2d'),
-            'bar',
-            processChartData(fiveYearData),
-            baseChartOptions('Top 10 Performers (5-Year Annualized)')
-        );
-
-        createChart(
-            document.getElementById('threeYearChart').getContext('2d'),
-            'bar',
-            processChartData(threeYearData),
-            baseChartOptions('Top 10 Performers (3-Year Annualized)')
-        );
-
-        createChart(
-            document.getElementById('oneYearChart').getContext('2d'),
-            'bar',
-            processChartData(oneYearData),
-            baseChartOptions('Top 10 Performers (1-Year Annualized)')
-        );
     </script>
 </body>
 </html>
