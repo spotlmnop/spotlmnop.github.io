@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Performance Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .chart-container {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Mutual Fund Performance Overview</h1>
+        <p class="footer">Data as of July 15, 2025</p>
+
+        <section>
+            <h2>Top 10 by 1-Year Performance (%)</h2>
+            <div class="chart-container">
+                <canvas id="oneYearChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <h2>Top 10 by 3-Year Annualized Performance (%)</h2>
+            <div class="chart-container">
+                <canvas id="threeYearChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <h2>Top 10 by 5-Year Annualized Performance (%)</h2>
+            <div class="chart-container">
+                <canvas id="fiveYearChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <h2>Complete Data Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>1-Year Return</th>
+                        <th>3-Year Return (Ann.)</th>
+                        <th>5-Year Return (Ann.)</th>
+                    </tr>
+                </thead>
+                <tbody id="fullDataTable">
+                    </tbody>
+            </table>
+        </section>
+        
+        <p class="footer">Disclaimer: Past performance is not indicative of future results.</p>
+    </div>
+
+    <script>
+        const performanceData = [
+            { ticker: "VBIRX", "1yr": 4.88, "3yr": 1.05, "5yr": 1.22 },
+            { ticker: "VBMPX", "1yr": 5.10, "3yr": 0.95, "5yr": 1.55 },
+            { ticker: "VEMIX", "1yr": 16.55, "3yr": 2.15, "5yr": 5.50 },
+            { ticker: "VEMPX", "1yr": 25.98, "3yr": 9.25, "5yr": 13.75 },
+            { ticker: "VFFVX", "1yr": 23.55, "3yr": 8.11, "5yr": 12.18 },
+            { ticker: "VFIFX", "1yr": 22.10, "3yr": 7.85, "5yr": 11.55 },
+            { ticker: "VFORX", "1yr": 20.95, "3yr": 7.15, "5yr": 10.98 },
+            { ticker: "VFTAX", "1yr": 23.99, "3yr": 11.05, "5yr": 13.95 },
+            { ticker: "VGSNX", "1yr": 15.88, "3yr": 4.10, "5yr": 2.50 },
+            { ticker: "VIGIX", "1yr": 27.85, "3yr": 12.15, "5yr": 15.98 },
+            { ticker: "VIIIX", "1yr": 25.10, "3yr": 11.20, "5yr": 14.05 },
+            { ticker: "VIMAX", "1yr": 24.15, "3yr": 8.99, "5yr": 13.25 },
+            { ticker: "VIPIX", "1yr": 6.89, "3yr": 2.55, "5yr": 4.85 },
+            { ticker: "VLXVX", "1yr": 23.51, "3yr": 8.10, "5yr": 12.15 },
+            { ticker: "VMGMX", "1yr": 27.11, "3yr": 10.01, "5yr": 14.87 },
+            { ticker: "VMIAX", "1yr": 21.05, "3yr": 8.75, "5yr": 13.01 },
+            { ticker: "VMVAX", "1yr": 22.50, "3yr": 8.55, "5yr": 12.55 },
+            { ticker: "VSIAX", "1yr": 23.15, "3yr": 8.80, "5yr": 12.95 },
+            { ticker: "VSMAX", "1yr": 25.75, "3yr": 9.15, "5yr": 13.66 },
+            { ticker: "VTABX", "1yr": 3.11, "3yr": -1.50, "5yr": -0.05 },
+            { ticker: "VTAPX", "1yr": 5.01, "3yr": 2.11, "5yr": 2.99 },
+            { ticker: "VTHRX", "1yr": 19.55, "3yr": 6.50, "5yr": 9.99 },
+            { ticker: "VTINX", "1yr": 10.50, "3yr": 4.25, "5yr": 6.01 },
+            { ticker: "VTIVX", "1yr": 21.50, "3yr": 7.50, "5yr": 11.15 },
+            { ticker: "VTPSX", "1yr": 18.15, "3yr": 4.55, "5yr": 7.88 },
+            { ticker: "VTSAX", "1yr": 25.05, "3yr": 10.18, "5yr": 14.11 },
+            { ticker: "VTTHX", "1yr": 20.01, "3yr": 6.88, "5yr": 10.45 },
+            { ticker: "VTTSX", "1yr": 23.11, "3yr": 7.99, "5yr": 11.99 },
+            { ticker: "VTTVX", "1yr": 15.55, "3yr": 5.95, "5yr": 8.88 },
+            { ticker: "VTWNX", "1yr": 13.98, "3yr": 5.15, "5yr": 7.95 },
+            { ticker: "VUSFX", "1yr": 5.25, "3yr": 2.88, "5yr": 2.15 },
+            { ticker: "VVIAX", "1yr": 22.88, "3yr": 9.88, "5yr": 12.85 },
+            { ticker: "VWIAX", "1yr": 15.11, "3yr": 8.85, "5yr": 8.10 }
+        ];
+
+        function createChart(canvasId, label, data, backgroundColor) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.ticker),
+                    datasets: [{
+                        label: label,
+                        data: data.map(item => item.value),
+                        backgroundColor: backgroundColor,
+                        borderColor: backgroundColor.map(c => c.replace('0.6', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateTable(data) {
+            const tableBody = document.getElementById('fullDataTable');
+            data.forEach(fund => {
+                let row = tableBody.insertRow();
+                row.insertCell(0).innerText = fund.ticker;
+                row.insertCell(1).innerText = fund['1yr'].toFixed(2) + '%';
+                row.insertCell(2).innerText = fund['3yr'].toFixed(2) + '%';
+                row.insertCell(3).innerText = fund['5yr'].toFixed(2) + '%';
+            });
+        }
+
+        // --- 1-Year Data ---
+        const top10OneYear = performanceData
+            .sort((a, b) => b['1yr'] - a['1yr'])
+            .slice(0, 10)
+            .map(d => ({ ticker: d.ticker, value: d['1yr'] }));
+
+        // --- 3-Year Data ---
+        const top10ThreeYear = performanceData
+            .sort((a, b) => b['3yr'] - a['3yr'])
+            .slice(0, 10)
+            .map(d => ({ ticker: d.ticker, value: d['3yr'] }));
+
+        // --- 5-Year Data ---
+        const top10FiveYear = performanceData
+            .sort((a, b) => b['5yr'] - a['5yr'])
+            .slice(0, 10)
+            .map(d => ({ ticker: d.ticker, value: d['5yr'] }));
+
+        // Create Charts
+        createChart('oneYearChart', '1-Year Return', top10OneYear, Array(10).fill('rgba(52, 152, 219, 0.6)'));
+        createChart('threeYearChart', '3-Year Return', top10ThreeYear, Array(10).fill('rgba(26, 188, 156, 0.6)'));
+        createChart('fiveYearChart', '5-Year Return', top10FiveYear, Array(10).fill('rgba(155, 89, 182, 0.6)'));
+        
+        // Populate the full data table
+        populateTable(performanceData.sort((a, b) => a.ticker.localeCompare(b.ticker)));
+
+    </script>
+</body>
+</html>
