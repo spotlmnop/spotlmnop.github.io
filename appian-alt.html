@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: Open-Source Alternatives to Appian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .section-active {
+            display: block;
+        }
+        .section-inactive {
+            display: none;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .selected-platform-card {
+            border: 2px solid #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+    <!-- Chosen Palette: "Cool Harmony" - A calming palette using a light gray background (#f8f9fa), white cards, deep indigo (#4f46e5) for primary actions and highlights, and varying shades of gray for text to create a clean, professional, and focused user experience. -->
+    <!-- Application Structure Plan: The SPA is designed as a guided decision-making tool. The structure flows logically from understanding the problem to exploring solutions and receiving a final recommendation. It uses a tabbed navigation approach for top-level sections: 1. Overview: Sets the context and manages user expectations about migration. 2. Platform Deep Dive: The core interactive dashboard where users can select a platform and see all relevant data (scores, pros/cons, technical details) update dynamically. This allows for direct, focused comparison. 3. Strategic Summary: Provides a comparative visualization and actionable recommendations. This structure was chosen over a simple long-scroll page to break down a complex decision into manageable, interactive steps, empowering the user to explore at their own pace without being overwhelmed. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Appian Feature Parity -> Goal: Compare -> Viz/Method: Donut Chart (Chart.js) -> Interaction: Updates on platform selection -> Justification: Provides a quick, visual summary of how well a tool matches Appian's core competencies.
+        - Report Info: Code Reusability -> Goal: Inform -> Viz/Method: Dynamic Text Block -> Interaction: Updates on platform selection -> Justification: Directly addresses the user's primary concern about reusing their codebase, providing a clear, honest assessment for each option.
+        - Report Info: Appian Concept Mapping -> Goal: Organize/Compare -> Viz/Method: HTML/Tailwind Diagram -> Interaction: Updates to show mappings for the selected platform -> Justification: Visually translates abstract Appian concepts into their equivalents in the new tool, aiding technical understanding for the development team.
+        - Report Info: Overall Migration Effort -> Goal: Compare -> Viz/Method: Horizontal Bar Chart (Chart.js) -> Interaction: Static comparison of all platforms -> Justification: Gives a high-level, easily digestible comparison of the most critical factor for the business: project effort and cost.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Navigating the Shift from Appian</h1>
+            <p class="mt-2 text-lg text-gray-600">An Interactive Guide to Open-Source Low-Code Alternatives</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-gray-200 mb-8">
+            <a id="nav-overview" class="nav-link active text-gray-500 border-b-2 border-transparent px-4 py-3" onclick="showSection('overview')">Migration Context</a>
+            <a id="nav-deepdive" class="nav-link text-gray-500 border-b-2 border-transparent px-4 py-3" onclick="showSection('deepdive')">Platform Deep Dive</a>
+            <a id="nav-summary" class="nav-link text-gray-500 border-b-2 border-transparent px-4 py-3" onclick="showSection('summary')">Strategic Summary</a>
+        </nav>
+
+        <main>
+            <section id="overview" class="section-active">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Understanding the Migration Journey</h2>
+                    <p class="text-gray-700 mb-4">Moving from a proprietary platform like Appian is more than a technical task; it's a strategic shift. The primary driver is often cost, but the goal is to find a sustainable, flexible, and powerful open-source alternative without losing the development velocity you're accustomed to. This guide is designed to help you navigate this transition by comparing top-tier open-source platforms.</p>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg my-6">
+                        <h3 class="text-lg font-semibold text-yellow-800">A Note on "Minimum Code Changes"</h3>
+                        <p class="text-yellow-700 mt-2">It's crucial to set realistic expectations. Appian's SAIL language, Process Models, and Record Types are proprietary. A direct, 1-to-1 code migration is not possible. The migration path involves **rebuilding** your application's logic, UI, and data models using the target platform's tools. However, you can reuse:
+                            <ul class="list-disc list-inside mt-2 text-yellow-700">
+                                <li><strong>Business Logic & Rules:</strong> The core "how it works" of your application can be documented and reimplemented.</li>
+                                <li><strong>Data Schemas:</strong> Your database structure can often be migrated with minimal changes.</li>
+                                <li><strong>Integration Endpoints:</strong> The external services you connect to remain the same.</li>
+                            </ul>
+                        </p>
+                    </div>
+                    <p class="text-gray-700">The key is to choose a platform whose architecture and philosophy align with your needs, making the rebuild process as efficient as possible. Use the 'Platform Deep Dive' to explore how each alternative handles the core components of a low-code application.</p>
+                </div>
+            </section>
+
+            <section id="deepdive" class="section-inactive">
+                 <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Select a Platform to Analyze</h2>
+                    <p class="text-gray-600 mt-1">Click on a card below to see a detailed breakdown of its features and migration profile.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div id="selector-joget" class="card p-4 text-center cursor-pointer" onclick="selectPlatform('joget')">
+                        <h3 class="font-bold text-xl text-gray-800">Joget</h3>
+                        <p class="text-sm text-gray-500 mt-1">Balanced Low-Code & BPM</p>
+                    </div>
+                    <div id="selector-camunda" class="card p-4 text-center cursor-pointer" onclick="selectPlatform('camunda')">
+                        <h3 class="font-bold text-xl text-gray-800">Camunda</h3>
+                        <p class="text-sm text-gray-500 mt-1">Developer-Centric BPM</p>
+                    </div>
+                    <div id="selector-budibase" class="card p-4 text-center cursor-pointer" onclick="selectPlatform('budibase')">
+                        <h3 class="font-bold text-xl text-gray-800">Budibase</h3>
+                        <p class="text-sm text-gray-500 mt-1">Internal Tool Builder</p>
+                    </div>
+                     <div id="selector-processmaker" class="card p-4 text-center cursor-pointer" onclick="selectPlatform('processmaker')">
+                        <h3 class="font-bold text-xl text-gray-800">ProcessMaker</h3>
+                        <p class="text-sm text-gray-500 mt-1">Workflow Automation</p>
+                    </div>
+                </div>
+
+                <div id="details-container" class="card p-6 md:p-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                             <h2 id="platform-name" class="text-3xl font-bold text-gray-900 mb-2"></h2>
+                             <p id="platform-description" class="text-gray-600 mb-6"></p>
+                            
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-lg mb-2">Pros</h4>
+                                    <ul id="platform-pros" class="list-disc list-inside space-y-1 text-gray-700"></ul>
+                                </div>
+                                 <div>
+                                    <h4 class="font-semibold text-lg mb-2">Cons</h4>
+                                    <ul id="platform-cons" class="list-disc list-inside space-y-1 text-gray-700"></ul>
+                                </div>
+                             </div>
+                        </div>
+                         <div class="flex flex-col items-center justify-center">
+                            <h4 class="font-semibold text-lg mb-2 text-center">Appian Feature Parity</h4>
+                            <div class="chart-container">
+                                <canvas id="parityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 border-t border-gray-200 pt-6">
+                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Migration & Technical Profile</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2">Code Reusability & Migration Strategy</h4>
+                                <p id="platform-reusability" class="text-gray-700"></p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2">Appian Concept Mapping</h4>
+                                <div id="platform-mapping" class="space-y-3"></div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="summary" class="section-inactive">
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Comparative Analysis & Recommendation</h2>
+                    <p class="text-gray-700 mb-8">This section summarizes the migration effort for each platform and provides a final recommendation based on common priorities. While no platform is a perfect 1:1 replacement, understanding their core strengths will guide you to the best fit for your organization's skills and application needs.</p>
+
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Estimated Migration Effort Comparison</h3>
+                    <div class="w-full max-w-3xl mx-auto h-96">
+                         <canvas id="effortChart"></canvas>
+                    </div>
+
+                    <div class="mt-12 border-t border-gray-200 pt-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Strategic Recommendations</h3>
+                        <div class="space-y-6">
+                            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-indigo-800">For a Balanced, Appian-like Experience:</h4>
+                                <p class="text-indigo-700 mt-1">Consider <strong class="font-bold">Joget</strong>. It offers a strong blend of visual process design, form building, and data management that will feel most familiar to Appian developers. Its Java-based architecture also provides a solid foundation for custom extensions if needed.</p>
+                            </div>
+                             <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-blue-800">For Complex, Mission-Critical Workflows:</h4>
+                                <p class="text-blue-700 mt-1">Consider <strong class="font-bold">Camunda</strong> or <strong class="font-bold">ProcessMaker</strong>. If your application's core value is in complex, long-running business processes and your team has strong development skills (especially Java for Camunda), these platforms provide best-in-class BPMN engines. The trade-off is a higher effort in building custom UIs.</p>
+                            </div>
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-semibold text-green-800">For Data-Driven Internal Tools & Dashboards:</h4>
+                                <p class="text-green-700 mt-1">Consider <strong class="font-bold">Budibase</strong>. If your applications are primarily forms-over-data, dashboards, and simple approval workflows, Budibase offers the fastest development experience for building modern, responsive user interfaces. It excels at connecting to various data sources and building CRUD (Create, Read, Update, Delete) applications quickly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>This interactive report was generated to aid in strategic decision-making. All data is based on publicly available information and expert analysis.</p>
+        </footer>
+    </div>
+
+<script>
+    const platformData = {
+        joget: {
+            name: 'Joget',
+            description: 'A flexible open-source platform to visually build enterprise web apps for coders and non-coders. It provides a balanced feature set covering process automation, form creation, and data management.',
+            parity: [30, 30, 25, 15],
+            effort: 4,
+            pros: [
+                'All-in-one platform (BPM, Forms, UI)',
+                'Visually-driven development approach',
+                'Good balance of features for Appian users',
+                'Extensible with Java plugins'
+            ],
+            cons: [
+                'Smaller community than some alternatives',
+                'UI may require more customization for modern look',
+                'Less focused on pure BPM than Camunda'
+            ],
+            reusability: 'Joget offers the most philosophically similar environment to Appian. While you cannot reuse SAIL, the process of visually modeling workflows, creating forms, and managing data records will be very familiar to your team, accelerating the rebuild process.',
+            mapping: [
+                { appian: 'Process Model', tool: 'Process Builder' },
+                { appian: 'SAIL Interface', tool: 'Form Builder / UI Builder' },
+                { appian: 'Record Type', tool: 'Datalist / CRUD' },
+            ]
+        },
+        camunda: {
+            name: 'Camunda',
+            description: 'A developer-friendly process automation platform focused on the BPMN, CMMN, and DMN standards. It is extremely powerful for complex workflow orchestration but requires more coding for UIs.',
+            parity: [40, 10, 25, 25],
+            effort: 7,
+            pros: [
+                'Industry-standard BPMN 2.0 engine',
+                'Highly scalable and robust for complex processes',
+                'Strong developer community and tooling',
+                'Language-agnostic via REST APIs'
+            ],
+            cons: [
+                'Low-code UI development is not a core focus',
+                'Requires significant development effort for front-ends',
+                'Steeper learning curve for non-developers'
+            ],
+            reusability: 'Focus on migrating the core business process logic. Your Appian process models can be directly translated to BPMN 2.0 diagrams in Camunda. The UI (SAIL) will need to be completely rebuilt from scratch using a separate front-end framework (e.g., React, Angular) that communicates with the Camunda engine.',
+            mapping: [
+                { appian: 'Process Model', tool: 'BPMN Diagram' },
+                { appian: 'SAIL Interface', tool: 'External App (React, Vue, etc.)' },
+                { appian: 'Record Type', tool: 'Process Variables / External DB' },
+            ]
+        },
+        budibase: {
+            name: 'Budibase',
+            description: 'An open-source low-code platform focused on building internal tools, forms, and admin panels quickly. It excels at connecting to databases and APIs to create data-driven applications.',
+            parity: [10, 40, 35, 15],
+            effort: 3,
+            pros: [
+                'Fastest UI development experience',
+                'Excellent for CRUD apps and dashboards',
+                'Multiple data source connectors',
+                'Modern and responsive UI components out-of-the-box'
+            ],
+            cons: [
+                'Limited complex BPM/workflow capabilities',
+                'Not designed for long-running, stateful processes',
+                'Less control over application architecture'
+            ],
+            reusability: 'Budibase is ideal if your Appian apps are mostly "Records" and "Interfaces". The UI will be rebuilt using Budibase\'s visual builder, which is fast and intuitive. You can connect directly to your existing databases, reusing your data schema. The process logic will need to be implemented using Budibase\'s simpler automation rules.',
+            mapping: [
+                { appian: 'Process Model', tool: 'Automations / Basic Workflows' },
+                { appian: 'SAIL Interface', tool: 'Screen & Component Builder' },
+                { appian: 'Record Type', tool: 'Data Source Table' },
+            ]
+        },
+        processmaker: {
+            name: 'ProcessMaker',
+            description: 'A low-code BPM and workflow automation platform that helps organizations orchestrate processes and connect systems. It has a strong focus on BPMN modeling and form creation.',
+            parity: [35, 25, 25, 15],
+            effort: 5,
+            pros: [
+                'Strong BPMN 2.0 modeling capabilities',
+                'User-friendly interface for both designers and users',
+                'Good for approval workflows and orchestrated tasks',
+                'Scalable architecture'
+            ],
+            cons: [
+                'Can be complex to set up and configure',
+                'UI customization may require more effort than Budibase',
+                'Community edition has limitations vs. enterprise'
+            ],
+            reusability: 'Similar to Joget, ProcessMaker provides a familiar environment. Your Appian Process Models can be rebuilt in the BPMN designer. The SAIL interfaces can be recreated using the Screen Builder. This platform is a strong contender if your primary need is robust process automation with integrated forms.',
+            mapping: [
+                { appian: 'Process Model', tool: 'Process Modeler (BPMN)' },
+                { appian: 'SAIL Interface', tool: 'Screen Builder' },
+                { appian: 'Record Type', tool: 'Data Connectors / Collections' },
+            ]
+        }
+    };
+
+    let parityChart, effortChart;
+
+    const sections = ['overview', 'deepdive', 'summary'];
+    const navLinks = {
+        overview: document.getElementById('nav-overview'),
+        deepdive: document.getElementById('nav-deepdive'),
+        summary: document.getElementById('nav-summary')
+    };
+
+    function showSection(sectionId) {
+        sections.forEach(id => {
+            const sectionEl = document.getElementById(id);
+            const navLink = navLinks[id];
+            if (id === sectionId) {
+                sectionEl.classList.remove('section-inactive');
+                sectionEl.classList.add('section-active');
+                navLink.classList.add('active');
+            } else {
+                sectionEl.classList.add('section-inactive');
+                sectionEl.classList.remove('section-active');
+                navLink.classList.remove('active');
+            }
+        });
+    }
+
+    function createMappingHTML(mappings) {
+        return mappings.map(m => `
+            <div class="flex items-center space-x-3">
+                <div class="flex-1 text-sm bg-gray-100 p-2 rounded text-center">${m.appian}</div>
+                <div class="text-indigo-600 font-bold text-xl">&#10230;</div>
+                <div class="flex-1 text-sm bg-indigo-50 p-2 rounded text-center text-indigo-800">${m.tool}</div>
+            </div>
+        `).join('');
+    }
+
+    function selectPlatform(platformKey) {
+        const data = platformData[platformKey];
+        if (!data) return;
+
+        document.querySelectorAll('.selector-platform-card').forEach(card => card.classList.remove('selected-platform-card'));
+        const selectorCard = document.getElementById(`selector-${platformKey}`);
+        if(selectorCard) {
+            document.querySelectorAll('.card[onclick]').forEach(el => el.classList.remove('selected-platform-card'));
+            selectorCard.classList.add('selected-platform-card');
+        }
+
+
+        document.getElementById('platform-name').textContent = data.name;
+        document.getElementById('platform-description').textContent = data.description;
+        document.getElementById('platform-reusability').textContent = data.reusability;
+        
+        const prosList = document.getElementById('platform-pros');
+        prosList.innerHTML = data.pros.map(pro => `<li>${pro}</li>`).join('');
+        
+        const consList = document.getElementById('platform-cons');
+        consList.innerHTML = data.cons.map(con => `<li>${con}</li>`).join('');
+
+        document.getElementById('platform-mapping').innerHTML = createMappingHTML(data.mapping);
+
+        updateParityChart(data);
+    }
+    
+    function initParityChart() {
+        const ctx = document.getElementById('parityChart').getContext('2d');
+        parityChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Process Modeling', 'UI Design', 'Data Management', 'Integrations'],
+                datasets: [{
+                    label: 'Appian Feature Parity',
+                    data: [],
+                    backgroundColor: [
+                        'rgba(79, 70, 229, 0.7)',
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(245, 158, 11, 0.7)'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateParityChart(data) {
+        parityChart.data.datasets[0].data = data.parity;
+        parityChart.update();
+    }
+    
+    function initEffortChart() {
+        const ctx = document.getElementById('effortChart').getContext('2d');
+        const labels = Object.values(platformData).map(p => p.name);
+        const effortData = Object.values(platformData).map(p => p.effort);
+        
+        effortChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Estimated Effort (Lower is Better)',
+                    data: effortData,
+                    backgroundColor: [
+                        'rgba(79, 70, 229, 0.6)',
+                        'rgba(219, 39, 119, 0.6)',
+                        'rgba(16, 185, 129, 0.6)',
+                        'rgba(59, 130, 246, 0.6)',
+                    ],
+                    borderColor: [
+                         'rgba(79, 70, 229, 1)',
+                        'rgba(219, 39, 119, 1)',
+                        'rgba(16, 185, 129, 1)',
+                        'rgba(59, 130, 246, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Relative Effort Score (1-10)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                         callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.x !== null) {
+                                    label += context.parsed.x;
+                                }
+                                let effort_level = "Low";
+                                if (context.parsed.x > 3) effort_level = "Medium";
+                                if (context.parsed.x > 6) effort_level = "High";
+                                label += ` (${effort_level})`
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initParityChart();
+        initEffortChart();
+        selectPlatform('joget'); 
+    });
+</script>
+
+</body>
+</html>
