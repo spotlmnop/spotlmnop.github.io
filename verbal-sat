@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verbal Mastery: Strategic Prep Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+        :root {
+            --bg-primary: #FDFCF8;
+            --bg-secondary: #F4F1EA;
+            --text-main: #2D2A26;
+            --text-muted: #6B665F;
+            --accent-sage: #8A9A8A;
+            --accent-clay: #C2A895;
+            --accent-slate: #5C6773;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom Scrollbar for internal overflow */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid var(--accent-sage);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: var(--accent-sage);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Isabelline, Sage, Clay) -->
+    <!-- Application Structure Plan: The app is divided into three distinct functional zones: 
+         1. 'Strategy Nexus': A tabbed interface for learning the core methodologies (How to think).
+         2. 'The Curator's Library': A filterable grid for selecting reading materials (What to read).
+         3. 'The Prep Dashboard': A data visualization section for planning and tracking (How to execute).
+         This structure moves the user from Theory -> Resources -> Action, a logical flow for exam prep. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#FDFCF8]/95 backdrop-blur-sm border-b border-[#E5E0D8]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-feather-alt text-[#8A9A8A] text-xl"></i>
+                    <span class="font-bold text-xl tracking-tight text-[#2D2A26]">Verbal<span class="text-[#8A9A8A]">Mastery</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('strategy')" class="text-sm font-medium hover:text-[#8A9A8A] transition-colors">Strategy</button>
+                    <button onclick="scrollToSection('library')" class="text-sm font-medium hover:text-[#8A9A8A] transition-colors">Library</button>
+                    <button onclick="scrollToSection('dashboard')" class="text-sm font-medium hover:text-[#8A9A8A] transition-colors">Dashboard</button>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-[#6B665F] hover:text-[#2D2A26]"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-[#F4F1EA] py-16 md:py-24">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 text-[#2D2A26]">Strategic Architecture for Reading & Writing</h1>
+            <p class="text-lg md:text-xl text-[#6B665F] mb-8 max-w-2xl mx-auto leading-relaxed">
+                A comprehensive, data-driven approach to deconstruct standardized tests. 
+                Move beyond passive reading to active strategic analysis.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button onclick="scrollToSection('strategy')" class="px-8 py-3 bg-[#2D2A26] text-white rounded-lg shadow-lg hover:bg-[#4a4641] transition-all transform hover:-translate-y-1">
+                    Begin Strategy
+                </button>
+                <button onclick="scrollToSection('dashboard')" class="px-8 py-3 bg-white text-[#2D2A26] border border-[#E5E0D8] rounded-lg shadow-sm hover:bg-[#FDFCF8] transition-all">
+                    View Plan
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: STRATEGY NEXUS -->
+        <!-- Visualization & Content Choices: Used a Tabbed Interface here. 
+             Goal: Organize distinct types of theoretical knowledge (Reading method vs Grammar rules vs Question types).
+             Interaction: Clicking tabs reveals focused content cards.
+             Justification: Preventing information overload by chunking complex rules into manageable categories. -->
+        <section id="strategy" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-[#8A9A8A] font-bold tracking-wider uppercase text-xs">Phase I: Theory</span>
+                <h2 class="text-3xl font-bold mt-2 mb-4">The Strategy Nexus</h2>
+                <p class="text-[#6B665F] max-w-3xl mx-auto">
+                    Success in the verbal section is not about speed reading; it's about <span class="font-semibold text-[#2D2A26]">evidence extraction</span>. 
+                    This section breaks down the core methodologies required to analyze text and correct grammar with surgical precision.
+                    Explore the modules below to understand the rules of engagement.
+                </p>
+            </div>
+
+            <!-- Strategy Tabs -->
+            <div class="flex justify-center mb-10 border-b border-[#E5E0D8]">
+                <button onclick="switchStrategyTab('reading')" id="tab-reading" class="tab-active px-6 py-3 text-sm md:text-base transition-all">
+                    <i class="fas fa-book-open mr-2"></i>Active Reading
+                </button>
+                <button onclick="switchStrategyTab('grammar')" id="tab-grammar" class="tab-inactive px-6 py-3 text-sm md:text-base transition-all">
+                    <i class="fas fa-pen-fancy mr-2"></i>Grammar Toolkit
+                </button>
+                <button onclick="switchStrategyTab('tactics')" id="tab-tactics" class="tab-inactive px-6 py-3 text-sm md:text-base transition-all">
+                    <i class="fas fa-chess-knight mr-2"></i>Question Tactics
+                </button>
+            </div>
+
+            <!-- Tab Content Area -->
+            <div id="strategy-content" class="bg-white rounded-2xl shadow-sm border border-[#E5E0D8] p-8 min-h-[400px]">
+                <!-- Dynamic Content Loaded via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE CURATOR'S LIBRARY -->
+        <!-- Visualization & Content Choices: Used a Filterable Grid (Masonry-style).
+             Goal: Provide a curated list of reading materials ("Books to Read") that mimics the test.
+             Interaction: Filter buttons (Literature, History, Science) to sort the grid.
+             Justification: Users need to practice specifically in genres they find difficult. Filtering allows for targeted browsing. -->
+        <section id="library" class="py-20 bg-[#F4F1EA]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                    <div class="max-w-2xl">
+                        <span class="text-[#C2A895] font-bold tracking-wider uppercase text-xs">Phase II: Immersion</span>
+                        <h2 class="text-3xl font-bold mt-2 mb-4">The Curator's Library</h2>
+                        <p class="text-[#6B665F]">
+                            You cannot improve your reading score without reading challenging texts. 
+                            The exam draws from specific domains. Select a genre to discover high-yield reading materials 
+                            that mimic the complexity and structure of actual exam passages.
+                        </p>
+                    </div>
+                    <div class="flex space-x-2 mt-6 md:mt-0">
+                        <button onclick="filterLibrary('all')" class="filter-btn px-4 py-2 text-sm rounded-full bg-[#2D2A26] text-white transition-all shadow-md" data-filter="all">All</button>
+                        <button onclick="filterLibrary('literature')" class="filter-btn px-4 py-2 text-sm rounded-full bg-white text-[#6B665F] hover:bg-[#E5E0D8] transition-all" data-filter="literature">Classic Lit</button>
+                        <button onclick="filterLibrary('history')" class="filter-btn px-4 py-2 text-sm rounded-full bg-white text-[#6B665F] hover:bg-[#E5E0D8] transition-all" data-filter="history">History</button>
+                        <button onclick="filterLibrary('science')" class="filter-btn px-4 py-2 text-sm rounded-full bg-white text-[#6B665F] hover:bg-[#E5E0D8] transition-all" data-filter="science">Science</button>
+                    </div>
+                </div>
+
+                <div id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Book Cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: PREP DASHBOARD -->
+        <!-- Visualization & Content Choices: Used Chart.js for data visualization.
+             Goal: Show the user HOW to prep (The "Help me prep" part).
+             Interaction: Interactive charts showing "Ideal Progress" and "Error Analysis".
+             Justification: Visualizing the study path reduces anxiety and clarifies the importance of error analysis over mindless drilling. -->
+        <section id="dashboard" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-[#5C6773] font-bold tracking-wider uppercase text-xs">Phase III: Execution</span>
+                <h2 class="text-3xl font-bold mt-2 mb-4">The Prep Dashboard</h2>
+                <p class="text-[#6B665F] max-w-3xl mx-auto">
+                    A strategy without a schedule is a wish. This dashboard simulates an optimized 4-week study trajectory.
+                    Use the <strong>Error Analysis</strong> chart to understand where students typically lose points, and the 
+                    <strong>Performance Arc</strong> to benchmark your target progress.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                
+                <!-- Chart 1: The Performance Arc -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-[#E5E0D8] flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-[#2D2A26]">Target Performance Trajectory</h3>
+                        <p class="text-sm text-[#6B665F]">Ideal score progression over a 4-week intensive cycle.</p>
+                    </div>
+                    <div class="flex-grow flex items-center justify-center bg-[#FDFCF8] rounded-xl p-4">
+                        <div class="chart-container">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between text-xs text-[#6B665F] px-4">
+                        <span><i class="fas fa-circle text-[#8A9A8A] mr-1"></i>Diagnostic</span>
+                        <span><i class="fas fa-circle text-[#8A9A8A] mr-1"></i>Concept Mastery</span>
+                        <span><i class="fas fa-circle text-[#8A9A8A] mr-1"></i>Timed Practice</span>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Error Analysis -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-[#E5E0D8] flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-[#2D2A26]">Common Error Distribution</h3>
+                        <p class="text-sm text-[#6B665F]">Breakdown of mistake types to prioritize in your error log.</p>
+                    </div>
+                    <div class="flex-grow flex items-center justify-center bg-[#FDFCF8] rounded-xl p-4">
+                        <div class="chart-container">
+                            <canvas id="errorChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-[#5C6773] italic">"The Error Log is the most valuable tool in your arsenal."</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- The 4-Week Plan Timeline -->
+            <div class="mt-16 bg-white rounded-2xl shadow-sm border border-[#E5E0D8] overflow-hidden">
+                <div class="bg-[#2D2A26] px-6 py-4">
+                    <h3 class="text-white font-bold text-lg"><i class="far fa-calendar-alt mr-2"></i>The 4-Week Sprint Plan</h3>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="space-y-8">
+                        
+                        <!-- Week 1 -->
+                        <div class="flex flex-col md:flex-row gap-4 border-l-2 border-[#8A9A8A] pl-6 relative">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#8A9A8A] border-4 border-white"></div>
+                            <div class="w-full md:w-32 flex-shrink-0">
+                                <span class="text-sm font-bold text-[#8A9A8A] uppercase tracking-wide">Week 1</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-[#2D2A26] mb-2">Foundation & Diagnostics</h4>
+                                <ul class="text-sm text-[#6B665F] space-y-2">
+                                    <li><i class="fas fa-check text-[#C2A895] mr-2"></i>Take full-length diagnostic test (Untimed).</li>
+                                    <li><i class="fas fa-check text-[#C2A895] mr-2"></i>Master the "Grammar Toolkit" rules (Subject-Verb, Punctuation).</li>
+                                    <li><i class="fas fa-check text-[#C2A895] mr-2"></i>Read 1 article daily from "Science" or "History" lists.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Week 2 -->
+                        <div class="flex flex-col md:flex-row gap-4 border-l-2 border-[#E5E0D8] pl-6 relative">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#E5E0D8] border-4 border-white"></div>
+                            <div class="w-full md:w-32 flex-shrink-0">
+                                <span class="text-sm font-bold text-[#6B665F] uppercase tracking-wide">Week 2</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-[#2D2A26] mb-2">Question Type Drilling</h4>
+                                <ul class="text-sm text-[#6B665F] space-y-2">
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Focus on "Evidence-Based" and "Inference" questions.</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Start maintaining the <strong>Error Log</strong> (Why did I fail?).</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>2 Timed Sections (Reading only).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Week 3 -->
+                        <div class="flex flex-col md:flex-row gap-4 border-l-2 border-[#E5E0D8] pl-6 relative">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#E5E0D8] border-4 border-white"></div>
+                            <div class="w-full md:w-32 flex-shrink-0">
+                                <span class="text-sm font-bold text-[#6B665F] uppercase tracking-wide">Week 3</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-[#2D2A26] mb-2">Stamina & Timing</h4>
+                                <ul class="text-sm text-[#6B665F] space-y-2">
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Full timed practice exam (Saturday morning).</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Review 19th-century literature passages (highest difficulty).</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Refine pacing: 13 mins per passage limit.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                         <!-- Week 4 -->
+                         <div class="flex flex-col md:flex-row gap-4 border-l-2 border-[#E5E0D8] pl-6 relative">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#E5E0D8] border-4 border-white"></div>
+                            <div class="w-full md:w-32 flex-shrink-0">
+                                <span class="text-sm font-bold text-[#6B665F] uppercase tracking-wide">Week 4</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-[#2D2A26] mb-2">Review & Rest</h4>
+                                <ul class="text-sm text-[#6B665F] space-y-2">
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Review entire Error Log.</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Light reading only (no heavy drilling 2 days before).</li>
+                                    <li><i class="fas fa-check text-[#E5E0D8] mr-2"></i>Sleep schedule adjustment.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#2D2A26] text-[#E5E0D8] py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold font-serif mb-4">Preparation is Process</h2>
+            <p class="text-sm text-[#8A9A8A] max-w-lg mx-auto mb-8">
+                "The difference between a good score and a great score is not intelligence, but the ability to recognize patterns under pressure."
+            </p>
+            <div class="flex justify-center space-x-6 text-sm">
+                <span><i class="fas fa-layer-group mr-2"></i>Analyze</span>
+                <span><i class="fas fa-book mr-2"></i>Read</span>
+                <span><i class="fas fa-chart-line mr-2"></i>Optimize</span>
+            </div>
+            <div class="mt-8 border-t border-[#4a4641] pt-8 text-xs text-[#6B665F]">
+                Generated for Educational Strategy • Based on Expert Test Prep Methodologies
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA OBJECTS ---
+        
+        // 1. Strategy Content Data
+        const strategyData = {
+            reading: `
+                <div class="grid md:grid-cols-2 gap-8 fade-in">
+                    <div>
+                        <h3 class="text-xl font-bold text-[#2D2A26] mb-4">Active Reading Protocol</h3>
+                        <p class="text-[#6B665F] mb-6">Passive reading is the enemy. You must engage with the text aggressively to retain structure and argument.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-[#F4F1EA] p-3 rounded-lg mr-4"><i class="fas fa-highlighter text-[#8A9A8A]"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-[#2D2A26]">The "Pencil Predator"</h4>
+                                    <p class="text-sm text-[#6B665F]">Underline the MAIN IDEA of each paragraph. Circle transition words (However, Therefore). Do not underline whole sentences.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-[#F4F1EA] p-3 rounded-lg mr-4"><i class="fas fa-glasses text-[#8A9A8A]"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-[#2D2A26]">Tone Analysis</h4>
+                                    <p class="text-sm text-[#6B665F]">Identify the author's attitude immediately. Is it critical? Objective? Enthusiastic? Mark (+), (-), or (0) in margins.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-[#FDFCF8] p-6 rounded-xl border border-[#E5E0D8]">
+                        <h4 class="font-bold text-[#8A9A8A] mb-3 text-xs uppercase tracking-wide">The Golden Rule</h4>
+                        <p class="text-2xl font-serif text-[#2D2A26] italic mb-6">"Every correct answer is strictly supported by the text. If you have to tell a story to make an answer work, it is wrong."</p>
+                        <div class="mt-4 p-4 bg-[#F4F1EA] rounded text-sm text-[#5C6773]">
+                            <strong>Tip:</strong> Read the blurb (intro text) first. It provides context that saves minutes of confusion.
+                        </div>
+                    </div>
+                </div>
+            `,
+            grammar: `
+                <div class="fade-in">
+                    <h3 class="text-xl font-bold text-[#2D2A26] mb-6 text-center">The "Big 4" Rules to Memorize</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Rule 1 -->
+                        <div class="p-5 border border-[#E5E0D8] rounded-xl hover:shadow-md transition-shadow">
+                            <div class="text-[#C2A895] text-2xl mb-2"><i class="fas fa-paragraph"></i></div>
+                            <h4 class="font-bold text-[#2D2A26] mb-2">Subject-Verb</h4>
+                            <p class="text-xs text-[#6B665F]">Ignore prepositional phrases between subject and verb. <br><em class="block mt-2 text-[#2D2A26]">"The box [of nails] IS heavy."</em></p>
+                        </div>
+                        <!-- Rule 2 -->
+                        <div class="p-5 border border-[#E5E0D8] rounded-xl hover:shadow-md transition-shadow">
+                            <div class="text-[#8A9A8A] text-2xl mb-2"><i class="fas fa-quote-right"></i></div>
+                            <h4 class="font-bold text-[#2D2A26] mb-2">Stop Punctuation</h4>
+                            <p class="text-xs text-[#6B665F]">Period = Semicolon = Comma+FANBOYS. Use these to separate two independent clauses.</p>
+                        </div>
+                        <!-- Rule 3 -->
+                        <div class="p-5 border border-[#E5E0D8] rounded-xl hover:shadow-md transition-shadow">
+                            <div class="text-[#5C6773] text-2xl mb-2"><i class="fas fa-compress-arrows-alt"></i></div>
+                            <h4 class="font-bold text-[#2D2A26] mb-2">Conciseness</h4>
+                            <p class="text-xs text-[#6B665F]">If 3 answers mean the same thing, the shortest one is usually correct. Avoid redundancy.</p>
+                        </div>
+                        <!-- Rule 4 -->
+                        <div class="p-5 border border-[#E5E0D8] rounded-xl hover:shadow-md transition-shadow">
+                            <div class="text-[#C2A895] text-2xl mb-2"><i class="fas fa-project-diagram"></i></div>
+                            <h4 class="font-bold text-[#2D2A26] mb-2">Modifiers</h4>
+                            <p class="text-xs text-[#6B665F]">Dangling modifiers must be followed immediately by what they modify.<br><em class="block mt-2 text-[#2D2A26]">"Walking down the street, the trees..." (WRONG)</em></p>
+                        </div>
+                    </div>
+                </div>
+            `,
+            tactics: `
+                 <div class="grid md:grid-cols-3 gap-6 fade-in">
+                    <!-- Tactic Card -->
+                    <div class="bg-[#FDFCF8] p-5 rounded-xl border-l-4 border-[#8A9A8A] shadow-sm">
+                        <h4 class="font-bold text-[#2D2A26] mb-2">Vocabulary in Context</h4>
+                        <p class="text-sm text-[#6B665F] mb-3">Don't pick the most common definition. Treat the word as a blank.</p>
+                        <div class="text-xs bg-[#F4F1EA] p-2 rounded">
+                            <strong>Strategy:</strong> Plug in your own word first, then match it to choices.
+                        </div>
+                    </div>
+                    <!-- Tactic Card -->
+                    <div class="bg-[#FDFCF8] p-5 rounded-xl border-l-4 border-[#C2A895] shadow-sm">
+                        <h4 class="font-bold text-[#2D2A26] mb-2">Evidence Pairs</h4>
+                        <p class="text-sm text-[#6B665F] mb-3">These are "Answer" + "Evidence" questions.</p>
+                        <div class="text-xs bg-[#F4F1EA] p-2 rounded">
+                            <strong>Strategy:</strong> Work backwards. Find the evidence lines first that support <em>any</em> answer choice.
+                        </div>
+                    </div>
+                    <!-- Tactic Card -->
+                    <div class="bg-[#FDFCF8] p-5 rounded-xl border-l-4 border-[#5C6773] shadow-sm">
+                        <h4 class="font-bold text-[#2D2A26] mb-2">Data Graphics</h4>
+                        <p class="text-sm text-[#6B665F] mb-3">Charts and graphs in the verbal section.</p>
+                        <div class="text-xs bg-[#F4F1EA] p-2 rounded">
+                            <strong>Strategy:</strong> Read the axis labels and the title. Ignore the passage; the answer is usually just in the chart.
+                        </div>
+                    </div>
+                 </div>
+            `
+        };
+
+        // 2. Library Book Data
+        const libraryData = [
+            { id: 1, title: "Pride and Prejudice", author: "Jane Austen", type: "literature", desc: "Essential for mastering 19th-century syntax and subtle irony.", difficulty: "Hard" },
+            { id: 2, title: "Scientific American", author: "Various", type: "science", desc: "Read 'Biology' and 'Astronomy' articles to prep for dense technical passages.", difficulty: "Medium" },
+            { id: 3, title: "The Federalist Papers", author: "Hamilton/Madison", type: "history", desc: "The gold standard for the 'Founding Documents' passage type. Dense archaic arguments.", difficulty: "Very Hard" },
+            { id: 4, title: "National Geographic", author: "Various", type: "science", desc: "Good for environmental science passages and data interpretation.", difficulty: "Easy" },
+            { id: 5, title: "Jane Eyre", author: "Charlotte Brontë", type: "literature", desc: "Gothic literature with complex emotional vocabulary.", difficulty: "Hard" },
+            { id: 6, title: "A Room of One's Own", author: "Virginia Woolf", type: "history", desc: "Great for the 'Global Conversation' or 'Civil Rights' passage types.", difficulty: "Medium" }
+        ];
+
+        // --- FUNCTIONS ---
+
+        // 1. Tab Switching Logic
+        function switchStrategyTab(tabName) {
+            // Update Tab Styles
+            ['reading', 'grammar', 'tactics'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    btn.className = 'tab-active px-6 py-3 text-sm md:text-base transition-all';
+                } else {
+                    btn.className = 'tab-inactive px-6 py-3 text-sm md:text-base transition-all';
+                }
+            });
+            // Update Content
+            document.getElementById('strategy-content').innerHTML = strategyData[tabName];
+        }
+
+        // 2. Library Rendering & Filtering
+        function renderLibrary(filter) {
+            const grid = document.getElementById('library-grid');
+            grid.innerHTML = '';
+            
+            // Filter Buttons Update
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.remove('bg-white', 'text-[#6B665F]');
+                    btn.classList.add('bg-[#2D2A26]', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-[#6B665F]');
+                    btn.classList.remove('bg-[#2D2A26]', 'text-white');
+                }
+            });
+
+            // Filter Data
+            const filteredData = filter === 'all' ? libraryData : libraryData.filter(item => item.type === filter);
+
+            // Create Cards
+            filteredData.forEach(book => {
+                const typeColors = {
+                    literature: 'bg-[#C2A895]',
+                    science: 'bg-[#8A9A8A]',
+                    history: 'bg-[#5C6773]'
+                };
+                
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-sm border border-[#E5E0D8] p-6 card-hover flex flex-col justify-between fade-in';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="${typeColors[book.type]} text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">${book.type}</span>
+                            <span class="text-xs font-semibold text-[#6B665F] border border-[#E5E0D8] px-2 py-0.5 rounded">${book.difficulty}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#2D2A26] leading-tight mb-1">${book.title}</h3>
+                        <p class="text-xs text-[#8A9A8A] mb-4 italic">${book.author}</p>
+                        <p class="text-sm text-[#6B665F] mb-6">${book.desc}</p>
+                    </div>
+                    <button class="w-full py-2 text-xs font-bold text-[#2D2A26] bg-[#F4F1EA] hover:bg-[#E5E0D8] rounded transition-colors">
+                        Add to Reading List
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterLibrary(type) {
+            renderLibrary(type);
+        }
+
+        // 3. Navigation Scroll
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 4. Chart Initialization
+        function initCharts() {
+            // Chart 1: Progress (Line Chart)
+            const ctxProgress = document.getElementById('progressChart').getContext('2d');
+            new Chart(ctxProgress, {
+                type: 'line',
+                data: {
+                    labels: ['Week 0', 'Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Projected Score',
+                        data: [500, 560, 610, 680, 720],
+                        borderColor: '#8A9A8A',
+                        backgroundColor: 'rgba(138, 154, 138, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#2D2A26',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#2D2A26',
+                            titleFont: { family: 'Inter', size: 13 },
+                            bodyFont: { family: 'Inter', size: 13 },
+                            padding: 10,
+                            cornerRadius: 4
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 400,
+                            max: 800,
+                            grid: { color: '#F4F1EA' },
+                            ticks: { font: { family: 'Inter' }, color: '#6B665F' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter' }, color: '#6B665F' }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Error Analysis (Doughnut)
+            const ctxError = document.getElementById('errorChart').getContext('2d');
+            new Chart(ctxError, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vocab Context', 'Evidence', 'Grammar', 'Inference'],
+                    datasets: [{
+                        data: [15, 35, 30, 20],
+                        backgroundColor: [
+                            '#C2A895', // Clay
+                            '#2D2A26', // Black
+                            '#8A9A8A', // Sage
+                            '#E5E0D8'  // Stone
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Inter', size: 11 },
+                                color: '#6B665F',
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#2D2A26',
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}% of Errors`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            switchStrategyTab('reading');
+            renderLibrary('all');
+            initCharts();
+        });
+
+    </script>
+</body>
+</html>
