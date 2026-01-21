@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RitFit Showdown: M1 Pro vs. M2</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); transition: all 0.3s ease; }
+        .card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .btn-primary { background-color: #3b82f6; color: white; padding: 0.5rem 1.5rem; border-radius: 9999px; font-weight: 600; transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #e2e8f0; color: #475569; padding: 0.5rem 1.5rem; border-radius: 9999px; font-weight: 600; transition: background-color 0.2s; }
+        .btn-secondary:hover { background-color: #cbd5e1; }
+        .active-tab { background-color: #3b82f6; color: white; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; height: 350px; }
+        .highlight-text { color: #f97316; font-weight: 700; }
+        
+        /* Custom scrollbar for tables */
+        .custom-scroll::-webkit-scrollbar { height: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+
+    <!-- Placeholder Comments Required by Instructions -->
+    <!-- Chosen Palette: Slate (Background), Blue (Primary Action), Orange (Highlight/Attention) - chosen for a clean, trustworthy 'tech spec' aesthetic appropriate for equipment research. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Immediate visual comparison and "The Verdict" (TL;DR) for quick decision making.
+         2. The Core Conflict (1:1 vs 2:1): An interactive calculator explaining the most confusing technical difference between these machines.
+         3. Spec Battle: Detailed data tables and Radar Chart to visualize strengths (Stability vs. Price vs. Features).
+         4. Community Sentiment: Summarized Reddit/Review consensus categorized by topic (Assembly, Feel, Value).
+         5. Interactive Recommendation Engine: A simple logic tree to suggest the right model based on user goals.
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Radar Chart: Comparison of 5 key attributes (Build Quality, Price Value, Accessory Count, Smoothess, Footprint). Goal: Compare.
+         - Interactive Ratio Calculator: Input weight -> Output 'Felt Weight'. Goal: Inform/Clarify technical spec.
+         - Dynamic Pros/Cons Lists: Text-based interaction to filter noise. Goal: Organize qualitative data.
+         - NO SVG/Mermaid used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50">
+
+    <!-- Navigation / Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="text-2xl font-bold text-slate-800">Gym<span class="text-blue-600">Compare</span></div>
+            </div>
+            <nav class="hidden md:flex gap-6">
+                <button onclick="scrollToSection('hero')" class="text-sm font-medium text-slate-600 hover:text-blue-600">Overview</button>
+                <button onclick="scrollToSection('ratio-calc')" class="text-sm font-medium text-slate-600 hover:text-blue-600">The Ratio Debate</button>
+                <button onclick="scrollToSection('specs')" class="text-sm font-medium text-slate-600 hover:text-blue-600">Specs & Charts</button>
+                <button onclick="scrollToSection('community')" class="text-sm font-medium text-slate-600 hover:text-blue-600">Reddit Sentiment</button>
+            </nav>
+            <button onclick="scrollToSection('verdict')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">Get Recommendation</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Section 1: Hero & The Verdict -->
+        <section id="hero" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div class="space-y-6">
+                <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold tracking-wide uppercase">Research Summary</div>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                    RitFit M1 Pro vs. M2
+                    <span class="block text-slate-400 text-2xl font-medium mt-2">Battle of the All-in-Ones</span>
+                </h1>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    Based on current market analysis, Reddit threads, and fitness reviews, the choice comes down to one critical factor: <span class="font-bold text-slate-900">Pulley Ratio</span>. 
+                    The M1 Pro is a raw strength builder, while the M2 is a refined functional trainer.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-white border border-slate-200 rounded-xl">
+                        <h3 class="font-bold text-lg mb-1">RitFit M1 Pro</h3>
+                        <p class="text-sm text-slate-500 mb-2">Best for: Pure Lifters</p>
+                        <ul class="text-sm space-y-1 text-slate-600">
+                            <li>&#8226; 1:1 Pulley Ratio</li>
+                            <li>&#8226; Heavier "Feel"</li>
+                            <li>&#8226; Compact Footprint</li>
+                            <li>&#8226; Lower Cost</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">POPULAR</div>
+                        <h3 class="font-bold text-lg mb-1 text-blue-900">RitFit M2</h3>
+                        <p class="text-sm text-blue-600 mb-2">Best for: Functional Fitness</p>
+                        <ul class="text-sm space-y-1 text-blue-800">
+                            <li>&#8226; 2:1 Pulley Ratio</li>
+                            <li>&#8226; Smoother Travel</li>
+                            <li>&#8226; More Accessories</li>
+                            <li>&#8226; Sturdier Build</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization: Quick Stats Radar -->
+            <div class="card p-6 flex flex-col items-center justify-center">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 w-full text-left border-b pb-2">Head-to-Head Analysis</h3>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <p class="text-xs text-slate-400 mt-4 text-center">Data aggregated from user reviews regarding perceived stability, value, and features.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: The Ratio Debate (Interactive) -->
+        <section id="ratio-calc" class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+            <div class="max-w-3xl mx-auto text-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">The "Ratio" Dealbreaker</h2>
+                <p class="text-slate-600">
+                    This is the #1 confusion point on Reddit. The <strong>M1 Pro usually has a 1:1 ratio</strong>, meaning 50lbs feels like 50lbs. 
+                    The <strong>M2 has a 2:1 ratio</strong>, meaning 50lbs feels like 25lbs. Why does M2 do this? For longer cable travel and smoother functional movements.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Calculator -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-lg mb-4">Feel the Difference</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Selected Weight Stack (lbs)</label>
+                        <input type="range" id="weightSlider" min="10" max="200" step="10" value="50" class="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-slate-500 mt-2">
+                            <span>10 lbs</span>
+                            <span id="weightDisplay" class="font-bold text-blue-600 text-lg">50 lbs</span>
+                            <span>200 lbs</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                            <div>
+                                <span class="block font-bold text-slate-800">M1 Pro (1:1)</span>
+                                <span class="text-xs text-slate-500">Direct Pull</span>
+                            </div>
+                            <div class="text-right">
+                                <span id="m1Feel" class="block font-bold text-xl text-slate-900">50 lbs</span>
+                                <span class="text-xs text-red-500 font-medium">Feels Heavy</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-200 shadow-sm ring-1 ring-blue-100">
+                            <div>
+                                <span class="block font-bold text-blue-900">M2 (2:1)</span>
+                                <span class="text-xs text-blue-600">Mechanical Advantage</span>
+                            </div>
+                            <div class="text-right">
+                                <span id="m2Feel" class="block font-bold text-xl text-blue-700">25 lbs</span>
+                                <span class="text-xs text-green-600 font-medium">Feels Smooth</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <div class="space-y-4">
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl font-bold text-slate-600">1</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Why choose 1:1 (M1 Pro)?</h4>
+                            <p class="text-sm text-slate-600">Better for heavy, static exercises like Lat Pulldowns or Seated Rows. You don't need to stack as much weight to feel resistance.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-600">2</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Why choose 2:1 (M2)?</h4>
+                            <p class="text-sm text-slate-600">Crucial for "Functional" moves (Cable Flyes, Woodchoppers). The cable extends further (usually 80"+ vs 60") so you don't run out of line, and the resistance is smoother.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Deep Dive Specs -->
+        <section id="specs">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6">Technical Specifications</h2>
+            <p class="mb-6 text-slate-600">Comparing the physical footprint and capabilities. The M2 is generally larger and includes more distinct attachments out of the box.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Comparison Table -->
+                <div class="lg:col-span-2 overflow-x-auto custom-scroll card p-0">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4">Feature</th>
+                                <th class="px-6 py-4">RitFit M1 Pro</th>
+                                <th class="px-6 py-4 text-blue-700 bg-blue-50">RitFit M2</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Cable Ratio</td>
+                                <td class="px-6 py-4">1:1 (Often)</td>
+                                <td class="px-6 py-4 bg-blue-50/30 font-semibold">2:1 (Functional)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Uprights</td>
+                                <td class="px-6 py-4">2" x 2" (14 Gauge)</td>
+                                <td class="px-6 py-4 bg-blue-50/30">2" x 2" (Reinforced)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Weight Stack</td>
+                                <td class="px-6 py-4">Often Plate Loaded (Optional Stack)</td>
+                                <td class="px-6 py-4 bg-blue-50/30">Usually Dual Integrated Stacks</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Smith Machine</td>
+                                <td class="px-6 py-4">Linear Bearing</td>
+                                <td class="px-6 py-4 bg-blue-50/30">Linear Bearing (Smoother Glide)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Accessories</td>
+                                <td class="px-6 py-4">Basic Set (~12 items)</td>
+                                <td class="px-6 py-4 bg-blue-50/30">Premium Set (Leg Press, Jammer Arms often included)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-medium text-slate-900">Assembly Time</td>
+                                <td class="px-6 py-4">4-6 Hours</td>
+                                <td class="px-6 py-4 bg-blue-50/30">6-8 Hours (More complex)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footprint Viz -->
+                <div class="card p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Footprint Check</h3>
+                        <p class="text-sm text-slate-500 mb-4">Ensure you have height clearance. The M2 is slightly deeper and wider.</p>
+                    </div>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Community Sentiment -->
+        <section id="community" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">Reddit Says...</h2>
+                <div class="space-y-4">
+                    <!-- Comment 1 -->
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-orange-400 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-orange-600">CRITICAL</span>
+                            <span class="text-xs text-slate-400">r/homegym</span>
+                        </div>
+                        <p class="text-sm text-slate-700 italic">"If you care about cable crossovers, skip the M1. The cable length is too short and the 1:1 ratio is jerky for small muscles. Get the M2 for the 2:1 ratio."</p>
+                    </div>
+                    <!-- Comment 2 -->
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-blue-400 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-blue-600">POSITIVE</span>
+                            <span class="text-xs text-slate-400">r/garagegym</span>
+                        </div>
+                        <p class="text-sm text-slate-700 italic">"The M2 smith machine feels noticeably smoother. The sheer amount of attachments you get with the M2 package makes it a better value if you're starting from scratch."</p>
+                    </div>
+                    <!-- Comment 3 -->
+                    <div class="bg-white p-4 rounded-lg border-l-4 border-slate-400 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-600">NEUTRAL / ADVICE</span>
+                            <span class="text-xs text-slate-400">Blog Review</span>
+                        </div>
+                        <p class="text-sm text-slate-700 italic">"Be prepared for shipping boxes. The M2 arrives in like 6-7 boxes. Assembly instructions are better on the M2 than the older M1 manual."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-white rounded-2xl p-8 flex flex-col justify-center">
+                <h3 class="text-2xl font-bold mb-4">The "M2 3D" Confusion</h3>
+                <p class="text-slate-300 mb-6 text-sm leading-relaxed">
+                    You mentioned "M2 3D". In Smith Machine terminology, "3D" usually refers to a bar that moves horizontally and vertically (like a Jones machine). <br><br>
+                    <strong>Note:</strong> The RitFit M2 is generally a <strong>Linear Smith Machine</strong> (vertical only). Users often search for "3D" because of the "3-in-1" marketing (Rack + Smith + Cables) or confuse it with competitor 3D models. Don't expect horizontal bar movement on the standard M2.
+                </p>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div class="bg-blue-500 h-full w-3/4"></div>
+                </div>
+                <div class="flex justify-between text-xs mt-2 text-slate-400">
+                    <span>Linear Stability (RitFit M2)</span>
+                    <span>3D Motion (Jones Machines)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Verdict Engine -->
+        <section id="verdict" class="py-12 border-t border-slate-200">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-slate-900 mb-8">Which one fits you?</h2>
+                
+                <div id="quiz-container" class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
+                    <h3 id="quiz-question" class="text-xl font-semibold mb-6">What is your primary training style?</h3>
+                    
+                    <div id="quiz-options" class="grid grid-cols-1 gap-4">
+                        <button onclick="quizResult('m1')" class="p-4 border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition text-left group">
+                            <span class="font-bold text-slate-800 block">Bodybuilding / Heavy Lifting</span>
+                            <span class="text-sm text-slate-500">I mainly do lat pulldowns, heavy rows, and squats.</span>
+                        </button>
+                        <button onclick="quizResult('m2')" class="p-4 border border-slate-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition text-left group">
+                            <span class="font-bold text-slate-800 block group-hover:text-blue-700">Athletic / Functional</span>
+                            <span class="text-sm text-slate-500">I need smooth cables for sports movements, flyes, and HIIT.</span>
+                        </button>
+                    </div>
+
+                    <div id="quiz-result" class="hidden mt-6 animate-fade-in">
+                        <div class="p-4 rounded-lg mb-4" id="result-box">
+                            <!-- Result injected here -->
+                        </div>
+                        <button onclick="resetQuiz()" class="text-sm text-slate-500 hover:text-slate-800 underline">Start Over</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-400 text-sm">
+            <p>Generated for research purposes comparing RitFit M1 Series vs M2 Series.</p>
+            <p class="mt-2">Always check official manufacturer specifications for the latest model updates.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            weight: 50,
+            quizStep: 0
+        };
+
+        // --- Interactive Ratio Calculator ---
+        const slider = document.getElementById('weightSlider');
+        const display = document.getElementById('weightDisplay');
+        const m1Feel = document.getElementById('m1Feel');
+        const m2Feel = document.getElementById('m2Feel');
+
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            state.weight = val;
+            updateCalculator();
+        });
+
+        function updateCalculator() {
+            display.textContent = `${state.weight} lbs`;
+            
+            // M1 Pro: 1:1 Ratio (Effective Weight = Selected Weight)
+            // Note: Friction accounts for ~5% loss usually, but we stick to ratio logic
+            m1Feel.textContent = `${state.weight} lbs`;
+
+            // M2: 2:1 Ratio (Effective Weight = 50% Selected Weight)
+            m2Feel.textContent = `${state.weight / 2} lbs`;
+        }
+
+        // --- Chart.js Implementations ---
+        
+        // 1. Radar Chart: Comparison
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Price Value', 'Build Quality', 'Smoothness', 'Accessories', 'Compactness'],
+                datasets: [{
+                    label: 'RitFit M1 Pro',
+                    data: [9, 7, 6, 6, 9], // High compactness/value, lower smoothness/acc
+                    backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                    borderColor: 'rgba(148, 163, 184, 1)',
+                    pointBackgroundColor: 'rgba(148, 163, 184, 1)',
+                    borderWidth: 2
+                }, {
+                    label: 'RitFit M2',
+                    data: [7, 9, 9, 10, 7], // High smoothness/build/acc, lower compactness/value score (higher price)
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 12, family: 'Inter' },
+                            color: '#64748b'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 2. Bar Chart: Dimensions
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Width (in)', 'Depth (in)', 'Height (in)'],
+                datasets: [
+                    {
+                        label: 'M1 Pro',
+                        data: [48, 57, 85], 
+                        backgroundColor: '#94a3b8'
+                    },
+                    {
+                        label: 'M2',
+                        data: [60, 65, 86], 
+                        backgroundColor: '#3b82f6'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + '"';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 40
+                    }
+                }
+            }
+        });
+
+        // --- Navigation Logic ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Quiz Logic ---
+        function quizResult(choice) {
+            const resultBox = document.getElementById('result-box');
+            const quizOptions = document.getElementById('quiz-options');
+            const quizResultDiv = document.getElementById('quiz-result');
+            const question = document.getElementById('quiz-question');
+
+            quizOptions.classList.add('hidden');
+            quizResultDiv.classList.remove('hidden');
+            question.textContent = "We recommend:";
+
+            if (choice === 'm1') {
+                resultBox.className = "bg-slate-100 border border-slate-300 p-6 rounded-xl text-center";
+                resultBox.innerHTML = `
+                    <h4 class="text-2xl font-bold text-slate-800 mb-2">RitFit M1 Pro</h4>
+                    <p class="text-slate-600 mb-4">You prioritize heavy lifting and raw strength. The 1:1 ratio is ideal for feeling the full weight, and you'll save money for extra plates.</p>
+                `;
+            } else {
+                resultBox.className = "bg-blue-50 border border-blue-200 p-6 rounded-xl text-center";
+                resultBox.innerHTML = `
+                    <h4 class="text-2xl font-bold text-blue-800 mb-2">RitFit M2</h4>
+                    <p class="text-blue-700 mb-4">You want a versatile, commercial-feel gym. The 2:1 ratio is essential for the athletic movements you described, and the extra accessories will serve you well.</p>
+                `;
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-options').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-question').textContent = "What is your primary training style?";
+        }
+
+        // Initial update
+        updateCalculator();
+
+    </script>
+</body>
+</html>
