@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Property Financial Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card-stat { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .card-stat:hover { transform: translateY(-3px); }
+        .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; font-weight: 600; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: #212529; }
+        .chart-container { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 650px; }
+        .nav-pills .nav-link.active { background-color: #0d6efd; }
+        .nav-pills .nav-link { color: #495057; font-weight: 500; }
+        .positive { color: #198754; }
+        .negative { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-6 fw-bold text-primary">2025 Property Report</h1>
+            <p class="text-muted">Interactive Expense & Revenue Breakdown</p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-5" id="summary-cards">
+        </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="chart-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Category Drill-Down</h5>
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-income-tab" data-bs-toggle="pill" data-bs-target="#pills-income" type="button" role="tab" onclick="renderChart('Income')">Income</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-expense-tab" data-bs-toggle="pill" data-bs-target="#pills-expense" type="button" role="tab" onclick="renderChart('Expense')">Expenses</button>
+                        </li>
+                    </ul>
+                </div>
+                <div id="chart-div" style="width: 100%; height: 90%;"></div>
+                <p class="text-center text-muted small mt-2">
+                    <i class="bi bi-info-circle"></i> Click on any sector to zoom in. Click the center to zoom out.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. The Raw Data ---
+    // Parsing the CSV data provided in the prompt
+    const rawData = [
+        { date: "12/31/2025", amount: 250, type: "Expense", l2: "Management Fees", l3: "Leasing Fee", l4: "Unit 0101-102" },
+        { date: "12/31/2025", amount: 0.21, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Garage 0-32" },
+        { date: "12/31/2025", amount: 95, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Unit 0101-102" },
+        { date: "12/31/2025", amount: 3.06, type: "Income", l2: "Rental Income", l3: "Move-in Charge", l4: "Garage 0-32" },
+        { date: "12/31/2025", amount: 75, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Garage 0-33" },
+        { date: "12/31/2025", amount: 1211, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Unit 0101-102" },
+        { date: "12/30/2025", amount: -736.42, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "12/30/2025", amount: 110, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Garage 0-30" },
+        { date: "12/30/2025", amount: -150, type: "Expense", l2: "Management Fees", l3: "Renewal Fee", l4: "Unit 0101-102" },
+        { date: "12/30/2025", amount: -72.76, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "12/30/2025", amount: -10.5, type: "Expense", l2: "Insurance", l3: "Liability Insurance", l4: "Unit 0101-102" },
+        { date: "12/19/2025", amount: 1050, type: "Income", l2: "Security Deposits", l3: "Deposit Transfer", l4: "Unit 0101-102" },
+        { date: "12/15/2025", amount: -61.44, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "12/12/2025", amount: -105.74, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "12/12/2025", amount: -25, type: "Expense", l2: "Management Fees", l3: "RSP Program", l4: "Unit 0101-102" },
+        { date: "12/12/2025", amount: -10.5, type: "Expense", l2: "Insurance", l3: "Liability Insurance", l4: "Unit 0101-102" },
+        { date: "12/12/2025", amount: -257.25, type: "Expense", l2: "Repairs & Maintenance", l3: "Cleaning", l4: "Turnover" },
+        { date: "12/12/2025", amount: -393.75, type: "Expense", l2: "Repairs & Maintenance", l3: "General Repair", l4: "Unit 0101-102" },
+        { date: "12/12/2025", amount: -354.38, type: "Expense", l2: "Repairs & Maintenance", l3: "General Repair", l4: "Unit 0101-102" },
+        { date: "12/12/2025", amount: -8.17, type: "Expense", l2: "Utilities", l3: "Water/Sewer", l4: "Sub-metering" },
+        { date: "12/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "12/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0101" },
+        { date: "12/03/2025", amount: 75, type: "Income", l2: "Rental Income", l3: "Rent", l4: "Garage 0-31" },
+        { date: "12/02/2025", amount: 75, type: "Income", l2: "Rental Income", l3: "Rent", l4: "Garage 0-34" },
+        { date: "12/01/2025", amount: 25, type: "Income", l2: "Other Income", l3: "Resident Benefits Pkg", l4: "Unit 0101-102" },
+        { date: "12/01/2025", amount: 75.5, type: "Income", l2: "Other Income", l3: "Amenities Fee", l4: "Unit 0101-102" },
+        { date: "12/01/2025", amount: 50, type: "Income", l2: "Other Income", l3: "Pet Fee", l4: "Unit 0101-102" },
+        { date: "12/01/2025", amount: 1050, type: "Income", l2: "Rental Income", l3: "Rent", l4: "Unit 0101-102" },
+        { date: "12/01/2025", amount: 10.5, type: "Income", l2: "Other Income", l3: "Insurance Reimbursement", l4: "Liability to Landlord" },
+        { date: "11/20/2025", amount: -64.09, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "11/13/2025", amount: -816.16, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "11/13/2025", amount: -6.25, type: "Expense", l2: "Management Fees", l3: "Late Fee Split", l4: "Unit 0101-102" },
+        { date: "11/13/2025", amount: -250, type: "Expense", l2: "Management Fees", l3: "Leasing Fee", l4: "Garage 0-34" },
+        { date: "11/13/2025", amount: -5.25, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "11/13/2025", amount: -105.74, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "11/13/2025", amount: -70.35, type: "Expense", l2: "Repairs & Maintenance", l3: "Pest Control", l4: "Unit 0101-102" },
+        { date: "11/13/2025", amount: -78.75, type: "Expense", l2: "Repairs & Maintenance", l3: "General Repair", l4: "Unit 0101-102" },
+        { date: "11/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "11/07/2025", amount: 7.5, type: "Income", l2: "Other Income", l3: "Late Fee", l4: "Garage 0-31" },
+        { date: "11/04/2025", amount: 3.75, type: "Income", l2: "Repairs & Maintenance", l3: "Reimbursement", l4: "Trash Removal" },
+        { date: "10/30/2025", amount: 75, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Garage 0-33" },
+        { date: "10/29/2025", amount: 110, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Garage 0-30" },
+        { date: "10/28/2025", amount: 1211, type: "Income", l2: "Rental Income", l3: "Prepaid Rent", l4: "Unit 0101-102" },
+        { date: "10/14/2025", amount: -747.2, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "10/14/2025", amount: -2.5, type: "Expense", l2: "Management Fees", l3: "Admin Fee", l4: "Insurance" },
+        { date: "10/14/2025", amount: -102.52, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "10/09/2025", amount: -57.04, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "10/09/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0101" },
+        { date: "10/03/2025", amount: 2.5, type: "Income", l2: "Other Income", l3: "Admin Fee", l4: "Insurance" },
+        { date: "10/03/2025", amount: 29.03, type: "Income", l2: "Rental Income", l3: "Rent", l4: "Unit 0101-102" },
+        { date: "09/25/2025", amount: -61.77, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "09/12/2025", amount: -2053, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "09/12/2025", amount: -184.52, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "09/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "09/05/2025", amount: 7.5, type: "Income", l2: "Other Income", l3: "Late Fee", l4: "Garage 0-34" },
+        { date: "08/14/2025", amount: -1857.12, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "08/14/2025", amount: -250, type: "Expense", l2: "Management Fees", l3: "Leasing Fee", l4: "Unit 0101-102" },
+        { date: "08/14/2025", amount: -189.09, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "08/12/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "07/22/2025", amount: -60.36, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "07/14/2025", amount: -2100.54, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "07/14/2025", amount: -184.52, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "07/14/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "06/26/2025", amount: -60.75, type: "Expense", l2: "Utilities", l3: "Reimbursement", l4: "APS via Security Dep" },
+        { date: "06/12/2025", amount: -1792.6, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "06/12/2025", amount: -63.86, type: "Expense", l2: "Utilities", l3: "Reimbursement", l4: "APS" },
+        { date: "06/12/2025", amount: -250, type: "Expense", l2: "Management Fees", l3: "Leasing Fee", l4: "Garage 0-33" },
+        { date: "06/12/2025", amount: -184.35, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "06/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "05/21/2025", amount: -62.98, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "05/14/2025", amount: -2105.48, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "05/14/2025", amount: -184.52, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "05/10/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "04/14/2025", amount: -2118.2, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "04/14/2025", amount: -189.77, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "04/09/2025", amount: -75, type: "Income", l2: "Rental Income", l3: "Rent Refund/NSF", l4: "Garage 0-33" },
+        { date: "04/08/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "03/17/2025", amount: -57.03, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "03/13/2025", amount: -2070.23, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "03/13/2025", amount: -189.77, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "03/13/2025", amount: -105, type: "Expense", l2: "Repairs & Maintenance", l3: "Safety Systems", l4: "Smoke Detector" },
+        { date: "03/07/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "02/13/2025", amount: -1902.89, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "02/13/2025", amount: -189.77, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "02/12/2025", amount: -58.98, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "02/05/2025", amount: -173, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "02/05/2025", amount: -110, type: "Income", l2: "Rental Income", l3: "Rent Refund/NSF", l4: "Garage 0-30" },
+        { date: "01/29/2025", amount: -150, type: "Expense", l2: "Management Fees", l3: "Renewal Fee", l4: "Garage 0-30" },
+        { date: "01/23/2025", amount: -2.25, type: "Expense", l2: "Taxes", l3: "Local Tax", l4: "El Mirage" },
+        { date: "01/23/2025", amount: -33.77, type: "Expense", l2: "Taxes", l3: "Local Tax", l4: "El Mirage" },
+        { date: "01/17/2025", amount: -65.19, type: "Expense", l2: "Utilities", l3: "Electric", l4: "APS" },
+        { date: "01/14/2025", amount: -2114.53, type: "Transfer", l2: "Owner Distribution", l3: "Owner Draw", l4: "Trust Disbursement" },
+        { date: "01/14/2025", amount: -189.77, type: "Expense", l2: "Management Fees", l3: "Monthly Mgmt Fee", l4: "Unit 0101-102" },
+        { date: "01/08/2025", amount: -26, type: "Expense", l2: "HOA", l3: "Special Assessment/Fee", l4: "Bldg 65" },
+        { date: "01/07/2025", amount: -160, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0102" },
+        { date: "01/07/2025", amount: -160, type: "Expense", l2: "HOA", l3: "Monthly Dues", l4: "Unit 0101" }
+    ];
+
+    // --- 2. Data Processing ---
+
+    let stats = {
+        income: 0,
+        expense: 0,
+        transfers: 0
+    };
+
+    // Helper to build hierarchy
+    function addToHierarchy(root, l2, l3, l4, value) {
+        // Find or create L2
+        let nodeL2 = root.children.find(c => c.name === l2);
+        if (!nodeL2) {
+            nodeL2 = { name: l2, children: [] };
+            root.children.push(nodeL2);
+        }
+        // Find or create L3
+        let nodeL3 = nodeL2.children.find(c => c.name === l3);
+        if (!nodeL3) {
+            nodeL3 = { name: l3, children: [] };
+            nodeL2.children.push(nodeL3);
+        }
+        // Find or create L4 (Leaf)
+        let nodeL4 = nodeL3.children.find(c => c.name === l4);
+        if (!nodeL4) {
+            nodeL4 = { name: l4, value: 0 };
+            nodeL3.children.push(nodeL4);
+        }
+        // Add value
+        nodeL4.value += value;
+    }
+
+    // Process raw data
+    const incomeRoot = { name: "Total Income", children: [] };
+    const expenseRoot = { name: "Total Expenses", children: [] };
+
+    rawData.forEach(row => {
+        // Stats Calculation
+        if (row.type === "Income") stats.income += row.amount;
+        if (row.type === "Expense") stats.expense += row.amount; // Negative numbers
+        if (row.type === "Transfer") stats.transfers += row.amount;
+
+        // Hierarchy Build
+        // Note: For Sunburst, we need absolute values for the size, but we aggregate first to handle refunds.
+        // We will sum the signed amounts, and then recursively convert to absolute for the chart at the end.
+        
+        if (row.type === "Income") {
+            addToHierarchy(incomeRoot, row.l2, row.l3, row.l4, row.amount);
+        } else if (row.type === "Expense") {
+            // Expenses are negative, but we sum them as is first.
+            addToHierarchy(expenseRoot, row.l2, row.l3, row.l4, row.amount);
+        }
+    });
+
+    // Helper to convert tree values to Absolute numbers for Plotly (Chart can't take negative sizes)
+    function cleanTreeValues(node) {
+        if (node.children) {
+            node.children.forEach(cleanTreeValues);
+            // After cleaning children, if a node has no children/value, remove it? 
+            // Plotly handles it. But we ensure values are positive for display size.
+        } else {
+            // It's a leaf
+            // If expense leaf is -100, we want size 100.
+            // If expense leaf is +100 (refund?), we treat as size 0 or ignore? 
+            // Let's take absolute value to show magnitude of activity.
+            node.value = Math.abs(node.value);
+        }
+    }
+
+    cleanTreeValues(incomeRoot);
+    cleanTreeValues(expenseRoot);
+
+    // --- 3. Rendering Logic ---
+
+    // Stats Cards
+    const noi = stats.income + stats.expense; // Expense is negative
+    const cashFlow = noi + stats.transfers;
+
+    const formatCurrency = (val) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+    };
+
+    const cardsHtml = `
+        <div class="col-md-3 col-sm-6">
+            <div class="card card-stat p-3">
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-value positive">${formatCurrency(stats.income)}</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card card-stat p-3">
+                <div class="stat-label">Total Expenses</div>
+                <div class="stat-value negative">${formatCurrency(Math.abs(stats.expense))}</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card card-stat p-3">
+                <div class="stat-label">Net Operating Income</div>
+                <div class="stat-value ${noi >= 0 ? 'positive' : 'negative'}">${formatCurrency(noi)}</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card card-stat p-3" title="Includes Owner Draws/Transfers">
+                <div class="stat-label">Net Cash Flow</div>
+                <div class="stat-value ${cashFlow >= 0 ? 'positive' : 'negative'}">${formatCurrency(cashFlow)}</div>
+                <small class="text-muted" style="font-size: 0.7rem;">(After Owner Draws: ${formatCurrency(stats.transfers)})</small>
+            </div>
+        </div>
+    `;
+    document.getElementById('summary-cards').innerHTML = cardsHtml;
+
+    // Chart Render Function
+    function renderChart(type) {
+        let rootData = type === 'Income' ? incomeRoot : expenseRoot;
+        let colorScale = type === 'Income' ? 'Teal' : 'RdBu'; 
+        
+        // Convert hierarchical JSON to Plotly format (labels, parents, values)
+        let labels = [];
+        let parents = [];
+        let values = [];
+        let ids = [];
+
+        function traverse(node, parentId) {
+            let currentId = parentId ? parentId + " - " + node.name : node.name;
+            
+            ids.push(currentId);
+            labels.push(node.name);
+            parents.push(parentId || "");
+            
+            // For parent nodes, value is sum of children (Plotly calculates this auto if leaf values exist)
+            // But we need to push 0 or null for parents if we rely on leaf sum.
+            // However, our tree has values only at leaves.
+            if (node.children) {
+                values.push(0); // Parent container
+                node.children.forEach(child => traverse(child, currentId));
+            } else {
+                values.push(node.value);
+            }
+        }
+
+        traverse(rootData, "");
+
+        var data = [{
+            type: "sunburst",
+            ids: ids,
+            labels: labels,
+            parents: parents,
+            values: values,
+            outsidetextfont: {size: 14, color: "#377eb8"},
+            leaf: {opacity: 0.4},
+            marker: {line: {width: 2}},
+            branchvalues: 'total',
+            hovertemplate: '<b>%{label}</b><br>Amount: $%{value:,.2f}<br>%{percentRoot:.1%} of Total<extra></extra>'
+        }];
+
+        var layout = {
+            margin: {l: 0, r: 0, b: 0, t: 0},
+            sunburstcolorway: type === 'Income' 
+                ? ["#2E8B57", "#3CB371", "#8FBC8F", "#66CDAA"] // Greens
+                : ["#CD5C5C", "#F08080", "#FA8072", "#E9967A", "#FF6347"], // Reds/Oranges
+            extendsunburstcolors: true
+        };
+
+        Plotly.newPlot('chart-div', data, layout, {responsive: true});
+    }
+
+    // Initial Load
+    renderChart('Income');
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
