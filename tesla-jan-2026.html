@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla ($TSLA) Strategic Analysis - Jan 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone/Warm Gray) with Amber/Orange Accents -->
+    <!-- Palette Logic: Creates a calm, sophisticated financial report feel, moving away from aggressive "Tech Blue" or "Stock Red/Green". -->
+    
+    <!-- Application Structure Plan: 
+         1. Header: Immediate context (Ticker, Price, Sentiment).
+         2. Executive Summary (The Pivot): Explains the shift from Auto to AI.
+         3. Dashboard Grid:
+            - Left Col: Financial Context (Price visualization, P/E).
+            - Right Col: Analyst Sentiment (Visualizing the huge spread).
+         4. Interactive Catalysts Section: 3-Tab system (Robotaxi, FSD, Optimus) to explore the 2026 drivers without clutter.
+         5. Performance & Risks: Comparative view of Q4 data and current headwinds.
+         6. Footer: Disclaimer.
+         
+         Why this structure? It moves from high-level status -> quantitative data -> qualitative drivers -> risk analysis, allowing the user to drill down into the "Why" behind the stock price.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Price Range Chart (Line/Area): Shows the $214-$499 context visually. Goal: Context.
+         2. Analyst Targets (Horizontal Bar): Highlights the extreme divergence ($25 vs $600). Goal: Compare.
+         3. Catalyst Tabs: Uses interactivity to hide/show complex text about Robotaxi/FSD. Goal: Inform/Organize.
+         4. Risk Cards: Simple grid layout for readability. Goal: Inform.
+         
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans leading-relaxed selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-stone-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-stone-900 text-white flex items-center justify-center rounded font-bold text-xl">T</div>
+                    <span class="font-semibold text-xl tracking-tight">Tesla Analysis <span class="text-stone-400 font-normal text-sm ml-1">| Jan 2026</span></span>
+                </div>
+                <div class="flex items-center gap-6 text-sm font-medium text-stone-500">
+                    <button onclick="scrollToSection('market-data')" class="hover:text-stone-900 transition-colors">Market Data</button>
+                    <button onclick="scrollToSection('catalysts')" class="hover:text-stone-900 transition-colors">Catalysts</button>
+                    <button onclick="scrollToSection('risks')" class="hover:text-stone-900 transition-colors">Risks</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Section 1: Hero / Executive Summary -->
+        <section class="fade-in">
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -mr-8 -mt-8 z-0"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <div>
+                            <h1 class="text-3xl md:text-4xl font-bold text-stone-900 mb-2">$TSLA: The AI Pivot</h1>
+                            <p class="text-lg text-stone-600 max-w-2xl">
+                                Tesla is no longer just a car company. As of January 2026, the market is valuing it as an <strong>AI & Robotics venture</strong>. While automotive margins compress, energy soars and the "Cybercab" era approaches.
+                            </p>
+                        </div>
+                        <div class="mt-4 md:mt-0 bg-stone-50 border border-stone-200 rounded-lg p-4 text-center min-w-[140px]">
+                            <div class="text-sm text-stone-500 uppercase tracking-wider font-semibold">Current Price</div>
+                            <div class="text-3xl font-bold text-stone-900 my-1">$431.44</div>
+                            <div class="text-xs text-orange-600 font-medium">Consolidating (-15% from Highs)</div>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                        <div class="p-4 rounded-lg bg-stone-50 border border-stone-100 hover:border-orange-200 transition-colors group cursor-default">
+                            <div class="text-stone-400 text-xs font-bold uppercase mb-1">Market Cap</div>
+                            <div class="text-xl font-bold text-stone-800">$1.43 Trillion</div>
+                            <div class="text-xs text-stone-500 mt-1 group-hover:text-orange-600 transition-colors">Valuation Driver: AI Hype</div>
+                        </div>
+                        <div class="p-4 rounded-lg bg-stone-50 border border-stone-100 hover:border-orange-200 transition-colors group cursor-default">
+                            <div class="text-stone-400 text-xs font-bold uppercase mb-1">P/E Ratio (Trailing)</div>
+                            <div class="text-xl font-bold text-stone-800">221x</div>
+                            <div class="text-xs text-stone-500 mt-1 group-hover:text-orange-600 transition-colors">Extremely High Premium</div>
+                        </div>
+                        <div class="p-4 rounded-lg bg-stone-50 border border-stone-100 hover:border-orange-200 transition-colors group cursor-default">
+                            <div class="text-stone-400 text-xs font-bold uppercase mb-1">Support Level</div>
+                            <div class="text-xl font-bold text-stone-800">$380 – $400</div>
+                            <div class="text-xs text-stone-500 mt-1 group-hover:text-orange-600 transition-colors">Key Buy Zone</div>
+                        </div>
+                        <div class="p-4 rounded-lg bg-stone-50 border border-stone-100 hover:border-orange-200 transition-colors group cursor-default">
+                            <div class="text-stone-400 text-xs font-bold uppercase mb-1">Q4 '25 Deliveries</div>
+                            <div class="text-xl font-bold text-stone-800">418,227</div>
+                            <div class="text-xs text-stone-500 mt-1 group-hover:text-red-500 transition-colors">▼ 15% YoY Decline</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Market Context & Charts -->
+        <section id="market-data" class="scroll-mt-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Price Action Context -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 fade-in">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-stone-900">Price Action Context (1 Year)</h2>
+                        <p class="text-sm text-stone-500 mt-1">
+                            Visualizing the volatility. The stock is currently cooling off after a massive late-2025 rally.
+                            Current price sits between the $500 resistance and $380 support.
+                        </p>
+                    </div>
+                    <!-- Chart Container 1 -->
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Analyst Sentiment Spread -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 fade-in">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-stone-900">Wall St. Consensus Divergence</h2>
+                        <p class="text-sm text-stone-500 mt-1">
+                            Analysts are deeply divided. The gap between Bulls ($600) and Bears ($25) highlights the uncertainty: is it a failing car maker or a booming AI giant?
+                        </p>
+                    </div>
+                    <!-- Chart Container 2 -->
+                    <div class="chart-container">
+                        <canvas id="analystChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The 2026 Catalysts (Interactive Tabs) -->
+        <section id="catalysts" class="scroll-mt-20 fade-in">
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="p-6 md:p-8 bg-stone-50 border-b border-stone-200">
+                    <h2 class="text-2xl font-bold text-stone-900">The 2026 Catalysts</h2>
+                    <p class="text-stone-600 mt-2 max-w-3xl">
+                        Investors are looking past vehicle sales figures. The current $1.43T valuation is built on three pillars. Click the tabs below to explore the drivers for 2026.
+                    </p>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-stone-200 overflow-x-auto">
+                    <button class="tab-btn px-6 py-4 text-sm font-bold uppercase tracking-wide text-orange-600 border-b-2 border-orange-600 bg-white hover:bg-stone-50 transition-colors focus:outline-none flex-shrink-0" onclick="openTab(event, 'robotaxi')">
+                        A. Robotaxi & Cybercab
+                    </button>
+                    <button class="tab-btn px-6 py-4 text-sm font-bold uppercase tracking-wide text-stone-500 border-b-2 border-transparent hover:text-stone-800 hover:bg-stone-50 transition-colors focus:outline-none flex-shrink-0" onclick="openTab(event, 'fsd')">
+                        B. FSD Subscription
+                    </button>
+                    <button class="tab-btn px-6 py-4 text-sm font-bold uppercase tracking-wide text-stone-500 border-b-2 border-transparent hover:text-stone-800 hover:bg-stone-50 transition-colors focus:outline-none flex-shrink-0" onclick="openTab(event, 'optimus')">
+                        C. Optimus Robot
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6 md:p-8 min-h-[300px]">
+                    
+                    <!-- Content: Robotaxi -->
+                    <div id="robotaxi" class="tab-content block animate-fade">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-bold text-stone-900 mb-3">The Cybercab Ramp-Up</h3>
+                                <p class="text-stone-600 mb-4 leading-relaxed">
+                                    Scheduled for production in <strong>Q2 2026</strong>. This is the cornerstone of the bull case. However, Elon Musk has warned of an "agonizingly slow" initial ramp due to radical new manufacturing processes.
+                                </p>
+                                <ul class="space-y-3 mt-6">
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Status:</strong> Pilot operations active in Bay Area & Austin.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Performance:</strong> Wait times reportedly under 5 minutes in pilot zones.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Expansion:</strong> Miami and Las Vegas targeted later this year.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/3 bg-orange-50 rounded-lg p-6 border border-orange-100 flex flex-col justify-center items-center text-center">
+                                <div class="text-4xl font-bold text-orange-600 mb-2">Q2 '26</div>
+                                <div class="text-sm text-stone-600 font-medium">Production Start Target</div>
+                                <div class="w-full h-px bg-orange-200 my-4"></div>
+                                <p class="text-xs text-stone-500 italic">"S-Curve Ramp expected"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: FSD -->
+                    <div id="fsd" class="tab-content hidden animate-fade">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-bold text-stone-900 mb-3">Monetization Pivot: Subscriptions</h3>
+                                <p class="text-stone-600 mb-4 leading-relaxed">
+                                    A massive business model shift. Tesla is ending the $8,000 upfront purchase option for Full Self-Driving on <strong>Feb 14, 2026</strong>. The focus is now entirely on recurring revenue.
+                                </p>
+                                <ul class="space-y-3 mt-6">
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>New Model:</strong> $99/month subscription only.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Goal:</strong> 10 Million active subscribers.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Implication:</strong> High-margin recurring software revenue to offset falling auto margins.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/3 bg-stone-100 rounded-lg p-6 border border-stone-200 flex flex-col justify-center items-center text-center">
+                                <div class="text-4xl font-bold text-stone-800 mb-2">$99<span class="text-lg text-stone-500 font-normal">/mo</span></div>
+                                <div class="text-sm text-stone-600 font-medium">New Standard Pricing</div>
+                                <div class="w-full h-px bg-stone-300 my-4"></div>
+                                <div class="text-xs text-red-500 font-bold">Feb 14 Deadline</div>
+                                <div class="text-xs text-stone-500">for lifetime purchase</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: Optimus -->
+                    <div id="optimus" class="tab-content hidden animate-fade">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-2/3">
+                                <h3 class="text-xl font-bold text-stone-900 mb-3">Optimus: The Long-Term Bet</h3>
+                                <p class="text-stone-600 mb-4 leading-relaxed">
+                                    The market is increasingly pricing in the potential of the humanoid robot business. This is capital intensive but offers the highest theoretical ceiling.
+                                </p>
+                                <ul class="space-y-3 mt-6">
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>CapEx Surge:</strong> 2026 spending >$10 Billion, largely for AI infra.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-orange-500 mr-2 text-xl">▸</span>
+                                        <span class="text-stone-700"><strong>Key Event:</strong> Jan 28 Earnings Call expected to provide production updates.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/3 bg-stone-800 rounded-lg p-6 border border-stone-700 flex flex-col justify-center items-center text-center text-stone-50">
+                                <div class="text-4xl font-bold text-white mb-2">$10B+</div>
+                                <div class="text-sm text-stone-400 font-medium">2026 CapEx Estimate</div>
+                                <div class="w-full h-px bg-stone-600 my-4"></div>
+                                <p class="text-xs text-stone-400">Heavily weighted to AI Hardware</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Risks & Headwinds -->
+        <section id="risks" class="scroll-mt-20 fade-in">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900">Risks & Headwinds</h2>
+                <p class="text-stone-600 mt-2">
+                    While the future looks automated, the present reality faces significant challenges.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Risk 1 -->
+                <div class="bg-white p-6 rounded-lg border-l-4 border-red-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-stone-900 mb-2">Valuation Stretch</h3>
+                    <p class="text-sm text-stone-600">
+                        Trading at <strong>~221x trailing P/E</strong>. The stock is priced for perfection. Any delay in Cybercab or earnings miss could trigger a sharp 10-20% correction.
+                    </p>
+                </div>
+                <!-- Risk 2 -->
+                <div class="bg-white p-6 rounded-lg border-l-4 border-orange-400 shadow-sm">
+                    <h3 class="font-bold text-lg text-stone-900 mb-2">Global Competition</h3>
+                    <p class="text-sm text-stone-600">
+                        BYD and Xiaomi are eroding market share in China with cheaper, tech-heavy alternatives. Q4 Auto margins (5.8%) reflect this pricing pressure.
+                    </p>
+                </div>
+                <!-- Risk 3 -->
+                <div class="bg-white p-6 rounded-lg border-l-4 border-stone-400 shadow-sm">
+                    <h3 class="font-bold text-lg text-stone-900 mb-2">The "Musk Discount"</h3>
+                    <p class="text-sm text-stone-600">
+                        Institutional concern persists regarding Elon Musk's time allocation (X, SpaceX, xAI) and political involvement affecting brand image.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-stone-200 pt-8 pb-12 mt-12 text-center text-stone-500 text-sm">
+            <p>Based on "Tesla ($TSLA) Stock Analysis: January 2026" Source Report.</p>
+            <p class="mt-2">Disclaimer: This dashboard is for informational purposes only and does not constitute financial advice. Market data as of Jan 21, 2026.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- Interaction Logic ---
+
+        // 1. Tab Switching Logic for "Catalysts" Section
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            var tabContent = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+                tabContent[i].classList.remove("flex"); // remove flex if used
+            }
+
+            // Reset all tab buttons
+            var tabLinks = document.getElementsByClassName("tab-btn");
+            for (var i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].classList.remove("text-orange-600", "border-orange-600", "bg-white");
+                tabLinks[i].classList.add("text-stone-500", "border-transparent");
+            }
+
+            // Show current tab
+            var activeTab = document.getElementById(tabName);
+            activeTab.style.display = "block";
+            
+            // Style active button
+            evt.currentTarget.classList.remove("text-stone-500", "border-transparent");
+            evt.currentTarget.classList.add("text-orange-600", "border-orange-600", "bg-white");
+        }
+
+        // 2. Smooth Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Initialize default tab
+        document.addEventListener("DOMContentLoaded", function() {
+            // Simulate click on first tab
+            const firstTabBtn = document.querySelector('.tab-btn');
+            if(firstTabBtn) firstTabBtn.click();
+        });
+
+
+        // --- Chart.js Implementations ---
+
+        // Chart 1: Price Action Context
+        // Visualizing the 52-week range and current consolidation
+        const ctxPrice = document.getElementById('priceChart').getContext('2d');
+        const priceChart = new Chart(ctxPrice, {
+            type: 'line',
+            data: {
+                labels: ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Oct', 'Nov', 'Dec (High)', 'Jan 2026 (Now)'],
+                datasets: [{
+                    label: 'TSLA Stock Price Estimate ($)',
+                    data: [215, 240, 280, 320, 410, 498, 431], // Simulated curve based on report High/Low data points
+                    borderColor: '#ea580c', // Orange-600
+                    backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `$${context.raw}`;
+                            }
+                        },
+                        backgroundColor: '#fff',
+                        titleColor: '#1c1917',
+                        bodyColor: '#1c1917',
+                        borderColor: '#e7e5e4',
+                        borderWidth: 1,
+                        padding: 10
+                    },
+                    annotation: {
+                        // Note: Chart.js annotation plugin is not loaded, implementing via simple data points/text in HTML context
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 200,
+                        max: 550,
+                        grid: {
+                            color: '#f5f5f4'
+                        },
+                        ticks: {
+                            callback: function(value) { return '$' + value; },
+                            color: '#78716c'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#78716c'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Analyst Targets
+        // Visualizing the Bull/Bear Spread
+        const ctxAnalyst = document.getElementById('analystChart').getContext('2d');
+        const analystChart = new Chart(ctxAnalyst, {
+            type: 'bar',
+            data: {
+                labels: ['Bear Case (GLJ)', 'Median Consensus', 'Bull Case (Wedbush)'],
+                datasets: [{
+                    label: 'Price Target ($)',
+                    data: [25, 390, 600],
+                    backgroundColor: [
+                        '#ef4444', // Red for Bear
+                        '#78716c', // Stone for Median
+                        '#16a34a'  // Green for Bull
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal Bar
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#1c1917',
+                        bodyColor: '#1c1917',
+                        borderColor: '#e7e5e4',
+                        borderWidth: 1,
+                        padding: 10
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#f5f5f4'
+                        },
+                         ticks: {
+                            callback: function(value) { return '$' + value; },
+                            color: '#78716c'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                weight: 'bold'
+                            },
+                            color: '#44403c'
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
